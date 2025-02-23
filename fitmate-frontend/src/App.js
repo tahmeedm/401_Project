@@ -1,43 +1,40 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Goals from "./pages/Goals";
+import Workouts from "./pages/Workouts";
+import Profile from "./pages/Profile";
 
 function App() {
-  const [goal, setGoal] = useState(""); // State to store user input
-  const [submittedGoal, setSubmittedGoal] = useState(null); // Store submitted goal
-
-  const handleChange = (event) => {
-    setGoal(event.target.value); // Update goal as user types
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSubmittedGoal(goal); // Save goal
-    setGoal(""); // Clear input field
-  };
-
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Welcome to FitMate</h1>
-      <p>Your AI-powered fitness and meal planner.</p>
+    <Router>
+      <div className="container">
+        {/* Navbar */}
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div className="container-fluid">
+            <Link className="navbar-brand" to="/">FitMate</Link>
+            <div className="collapse navbar-collapse">
+              <ul className="navbar-nav ms-auto">
+                <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/goals">Goals</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/workouts">Workouts</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/profile">Profile</Link></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={goal}
-          onChange={handleChange}
-          placeholder="Enter your fitness goal"
-          style={{ padding: "10px", width: "250px", marginRight: "10px" }}
-        />
-        <button type="submit" style={{ padding: "10px 20px", cursor: "pointer" }}>
-          Submit
-        </button>
-      </form>
-
-      {submittedGoal && (
-        <p style={{ marginTop: "20px", fontWeight: "bold" }}>
-          Your goal: {submittedGoal}
-        </p>
-      )}
-    </div>
+        {/* Page Content */}
+        <div className="mt-4">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/goals" element={<Goals />} />
+            <Route path="/workouts" element={<Workouts />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
