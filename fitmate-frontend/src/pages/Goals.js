@@ -2,13 +2,17 @@ import React, { useState } from "react";
 
 function Goals() {
   const [goal, setGoal] = useState("");
-  const [goalList, setGoalList] = useState([]);
+  const [goalList, setGoalList] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [goalCount, setGoalCount] = useState(1);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (goal.trim() !== "") {
-      setGoalList([...goalList, goal]);
+      setGoalList({ ...goalList, [`goal${goalCount}`]: goal });
       setGoal("");
+      setGoalCount(goalCount + 1);
+      setSaved(true);
     }
   };
 
@@ -26,9 +30,11 @@ function Goals() {
         <button type="submit" className="btn btn-primary">Add Goal</button>
       </form>
 
+      {saved && <p className="text-success mt-2">Goal added successfully!</p>}
+
       <ul className="list-group mt-3">
-        {goalList.map((g, index) => (
-          <li key={index} className="list-group-item">{g}</li>
+        {Object.keys(goalList).map((key, index) => (
+          <li key={index} className="list-group-item">{`${key}: ${goalList[key]}`}</li>
         ))}
       </ul>
     </div>
