@@ -13,55 +13,75 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link"
 import { Dumbbell } from "lucide-react"
 
-const formSchema = z.object({
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
-})
+const formSchema = z
+  .object({
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+    email: z.string().email({
+      message: "Please enter a valid email address.",
+    }),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters.",
+    }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  })
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log("Logging in user:", values.email);
+  
     try {
-      const res = await fetch(`http://localhost:80/login`, {
+      const res = await fetch(`http://localhost:80/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }),
       });
   
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.detail || "Invalid credentials");
+        throw new Error(errorData.detail || "Registration failed");
       }
   
-      const data = await res.json();
-      localStorage.setItem("fitmate_token", data.token);
+      toast({
+        title: "Registration successful!",
+        description: "Your account has been created. You can now log in.",
+      });
   
-      toast({ title: "Success!", description: "Welcome back to FitMate." });
-      router.push("/dashboard");
-    } catch (error) {
-      toast({ title: "Login failed", description: String(error.message), variant: "destructive" });
+      router.push("/login");
+    } catch (error: any) {
+      toast({
+        title: "Registration failed",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
   }
   
-  
+
   return (
     <div className="container mx-auto py-10 px-4 flex flex-col items-center justify-center min-h-[80vh]">
       <div className="flex items-center gap-2 font-bold text-xl mb-8">
@@ -76,13 +96,27 @@ export default function LoginPage() {
       <Card className="max-w-md w-full glass-effect border-white/10">
         <CardHeader>
           <CardTitle className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-cyber-teal">
-            Login to FitMate
+            Create an Account
           </CardTitle>
-          <CardDescription>Enter your credentials to access your fitness dashboard</CardDescription>
+          <CardDescription>Register to start your fitness journey with FitMate</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} className="glass-effect border-white/10" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="email"
@@ -111,18 +145,32 @@ export default function LoginPage() {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••" {...field} className="glass-effect border-white/10" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button
                 type="submit"
                 className="w-full bg-gradient-to-r from-primary to-cyber-teal hover:shadow-glow transition-all duration-300"
                 disabled={isLoading}
               >
-                {isLoading ? "Logging in..." : "Login"}
+                {isLoading ? "Creating account..." : "Register"}
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <Link href="/register" className="text-primary hover:underline">
-                  Register
+                Already have an account?{" "}
+                <Link href="/login" className="text-primary hover:underline">
+                  Login
                 </Link>
               </div>
             </form>

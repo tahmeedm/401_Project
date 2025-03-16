@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 # Pydantic models (simulating database tables)
@@ -25,3 +25,12 @@ class WorkoutPlan(BaseModel):
 
 class MealPlan(BaseModel):
     meal_plan: str
+
+# User model
+class User(BaseModel):
+    email: EmailStr
+    password: str
+
+# Token response model
+class TokenResponse(BaseModel):
+    token: str

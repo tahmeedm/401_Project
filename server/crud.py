@@ -1,11 +1,14 @@
 from typing import List, Optional
 from models import UserProfile, WorkoutPlan, MealPlan, FitnessGoal
-
+from passlib.context import CryptContext
+import jwt
+import datetime
 # In-memory storage (simulating a database)
 db_users = {}
 db_goals = {}
 db_workout_plans = {}
 db_meal_plans = {}
+auth_db = {}
 
 # Helper functions to simulate DB operations
 def create_user(profile: UserProfile):
@@ -47,3 +50,31 @@ def get_meal_plans(user_id: int):
     
 def get_progress(user_id: int):
     return {"weight": 75.0, "workout_performance": "Increase in strength", "calories_intake": 2200}
+
+
+
+## auth
+# Password hashing setup
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Secret key for JWT
+SECRET_KEY = "supersecretkey" 
+
+# JWT Token Expiry
+TOKEN_EXPIRY_MINUTES = 30
+
+
+
+# Helper function to hash passwords
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+# Helper function to verify passwords
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+# Helper function to create JWT token
+def create_jwt_token(email: str):
+    expiration = datetime.datetime.now() + datetime.timedelta(minutes=TOKEN_EXPIRY_MINUTES)
+    payload = {"sub": email, "exp": expiration}
+    return jwt.encode(payload, SECRET_KEY, algorithm="HS256")

@@ -14,7 +14,7 @@ async def create_user_profile(profile: UserProfile):
     return {"user_id": user_id, "profile": profile}
 
 # Get User Profile
-@router.get("/profile/{user_id}")
+@router.get("/profile")
 async def get_user_profile(user_id: int):
     profile = get_user(user_id)
     if profile is None:
