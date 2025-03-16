@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..crud import generate_meal_plan, get_meal_plans
+from crud import generate_meal_plan, get_meal_plans
 router = APIRouter()
 
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Request
 from authlib.integrations.starlette_client import OAuth
 from fastapi.responses import RedirectResponse
 from fastapi import HTTPException
-from ..config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL
+from config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL
 
 oauth = OAuth()
 router = APIRouter()

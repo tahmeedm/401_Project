@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .api import auth, profile, goals, workout, meal, progress
+from api import auth, profile, goals, workout, meal, progress
 
 # Create the FastAPI application instance
 app = FastAPI()

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from .models import UserProfile, WorkoutPlan, MealPlan, FitnessGoal
+from models import UserProfile, WorkoutPlan, MealPlan, FitnessGoal
 
 # In-memory storage (simulating a database)
 db_users = {}

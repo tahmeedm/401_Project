@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..crud import create_workout_plan, get_workout_plan
+from crud import create_workout_plan, get_workout_plan
 
 router = APIRouter()
 

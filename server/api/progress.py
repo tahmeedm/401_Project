@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..crud import get_progress
+from crud import get_progress
 
 router = APIRouter()
 

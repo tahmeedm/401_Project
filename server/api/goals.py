@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from ..models import FitnessGoal
-from ..crud import get_goal, create_goal
+from models import FitnessGoal
+from crud import get_goal, create_goal
 router = APIRouter()
 
 
