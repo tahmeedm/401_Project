@@ -70,54 +70,52 @@ export default function MealPlanForm() {
   }, [router, form])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) return
-
-    setIsLoading(true)
-
+    if (!user) return;
+  
+    setIsLoading(true);
+  
     try {
-      // In a real app, this would be an API call to save the meal plan
-      console.log("Saving meal plan data:", values)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Save meal plan to localStorage (simulating a database)
-      const mealPlans = JSON.parse(localStorage.getItem("fitmate_meal_plans") || "[]")
-      const existingPlanIndex = mealPlans.findIndex((plan: any) => plan.userId === user.id)
-
-      const mealPlanData = {
-        userId: user.id,
-        ...values,
-        updatedAt: new Date().toISOString(),
+      const token = localStorage.getItem("fitmate_token");
+      if (!token) {
+        throw new Error("Authentication required. Please log in.");
       }
-
-      if (existingPlanIndex >= 0) {
-        // Update existing meal plan
-        mealPlans[existingPlanIndex] = mealPlanData
-      } else {
-        // Add new meal plan
-        mealPlans.push(mealPlanData)
+  
+      // Send meal plan to FastAPI
+      const response = await fetch(`http://localhost:80/meal-plan`, {
+        method: "POST", // Use POST or PUT based on backend logic
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          ...values,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create meal plan.");
       }
-
-      localStorage.setItem("fitmate_meal_plans", JSON.stringify(mealPlans))
-
+  
       toast({
         title: "Meal preferences saved!",
-        description: "Your meal plan has been created and saved to the database.",
-      })
-
+        description: "Your meal plan has been created successfully.",
+      });
+  
       // Redirect to workout plan creation
-      router.push(`/workout-plan`)
-    } catch (error) {
+      router.push(`/workout-plan`);
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to create meal plan. Please try again.",
+        description: error.message || "Something went wrong.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
+  
 
   return (
     <div className="container mx-auto py-10 px-4">

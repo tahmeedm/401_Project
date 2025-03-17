@@ -17,7 +17,7 @@ export default function MealPlanPage({ params }: { params: { userId: string } })
   useEffect(() => {
     async function fetchMealPlan() {
       try {
-        const response = await fetch(`/meal-plan/${params.userId}`)
+        const response = await fetch(`http://localhost:80/meal-plan/${params.userId}`)
 
         if (!response.ok) {
           throw new Error("Failed to fetch meal plan")

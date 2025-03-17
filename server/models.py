@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional
+from pydantic import BaseModel, EmailStr, Field
+from typing import List, Optional
 
 # Pydantic models (simulating database tables)
 
@@ -21,10 +21,21 @@ class FitnessGoal(BaseModel):
 
 
 class WorkoutPlan(BaseModel):
-    workout_routine: str
+    workout_type: str
+    days_per_week: int
+    equipment_access: List[str]
+    workout_duration: str  # Example: "30-45" minutes
+
 
 class MealPlan(BaseModel):
-    meal_plan: str
+    calories: str = Field(..., pattern="^(low|medium|high)$", description="Caloric intake preference")
+    allergies: List[str] = Field(default=[], description="List of allergies")
+
+# class WorkoutData(BaseModel):
+#     workout_type: str
+#     days_per_week: int
+#     equipment: List[str]
+#     workout_duration: str
 
 # User model
 class User(BaseModel):

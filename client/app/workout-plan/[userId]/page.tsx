@@ -17,7 +17,7 @@ export default function WorkoutPlanPage({ params }: { params: { userId: string }
   useEffect(() => {
     async function fetchWorkoutPlan() {
       try {
-        const response = await fetch(`/workout-plan/${params.userId}`)
+        const response = await fetch(`http://localhost:80/workout-plan/${params.userId}`)
 
         if (!response.ok) {
           throw new Error("Failed to fetch workout plan")

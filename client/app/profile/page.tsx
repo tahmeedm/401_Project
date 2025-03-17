@@ -104,54 +104,47 @@ export default function ProfileForm() {
   }, [router, form])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!user) return
-
-    setIsLoading(true)
-
+    if (!user) return;
+  
+    setIsLoading(true);
+  
     try {
-      // In a real app, this would be an API call to save the profile
-      console.log("Saving profile data:", values)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Save profile to localStorage (simulating a database)
-      const userProfiles = JSON.parse(localStorage.getItem("fitmate_profiles") || "[]")
-      const existingProfileIndex = userProfiles.findIndex((profile: any) => profile.userId === user.id)
-
-      const profileData = {
-        userId: user.id,
-        ...values,
-        updatedAt: new Date().toISOString(),
+      const token = localStorage.getItem("fitmate_token");
+      if (!token) {
+        throw new Error("Authentication required. Please log in.");
       }
-
-      if (existingProfileIndex >= 0) {
-        // Update existing profile
-        userProfiles[existingProfileIndex] = profileData
-      } else {
-        // Add new profile
-        userProfiles.push(profileData)
+  
+      // Save profile data via FastAPI
+      const response = await fetch(`http://localhost:80/profile`, {
+        method: "POST", // Use POST or PUT based on backend logic
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to save profile. Please try again.");
       }
-
-      localStorage.setItem("fitmate_profiles", JSON.stringify(userProfiles))
-
+  
       toast({
         title: "Profile saved!",
-        description: "Your fitness profile has been saved to the database.",
-      })
-
+        description: "Your fitness profile has been successfully updated.",
+      });
+  
       // Redirect to meal plan creation
-      router.push(`/meal-plan`)
-    } catch (error) {
+      router.push(`/meal-plan`);
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to save profile. Please try again.",
+        description: error.message || "Something went wrong.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
+  
 
   return (
     <div className="container mx-auto py-10 px-4">

@@ -46,32 +46,47 @@ export default function WorkoutPlanForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
-
+    setIsLoading(true);
+  
     try {
-      // In a real app, this would be an API call to save the workout plan
-      console.log("Saving workout plan data:", values)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
+      const token = localStorage.getItem("fitmate_token");
+      if (!token) {
+        throw new Error("Authentication required. Please log in.");
+      }
+  
+      // Send workout plan to FastAPI
+      const response = await fetch(`http://localhost:80/workout-plan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to create workout plan.");
+      }
+  
       toast({
         title: "Workout plan created!",
-        description: "Your workout plan has been saved to the database.",
-      })
-
+        description: "Your workout plan has been saved successfully.",
+      });
+  
       // Redirect to dashboard
-      router.push(`/dashboard`)
-    } catch (error) {
+      router.push(`/dashboard`);
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to create workout plan. Please try again.",
+        description: error.message || "Something went wrong.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
+  
 
   return (
     <div className="container mx-auto py-10 px-4">

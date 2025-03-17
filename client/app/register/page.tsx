@@ -69,7 +69,7 @@ export default function RegisterPage() {
         description: "Your account has been created. You can now log in.",
       });
   
-      router.push("/login");
+      router.push("/profile");
     } catch (error: any) {
       toast({
         title: "Registration failed",

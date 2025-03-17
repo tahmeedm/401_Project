@@ -27,12 +27,17 @@ def create_goal(goal: FitnessGoal):
 def get_goal(user_id: int):
     return db_goals.get(user_id)
 
-def create_workout_plan(user_id: int):
-    profile = get_user(user_id)
-    # generate workout plan based on user's fitness level
-    workout_plan = ["Monday: Chest and Triceps", "Wednesday: Back and Biceps", "Friday: Legs and Shoulders"]
-    db_workout_plans[user_id] = workout_plan
-    return workout_plan
+# def create_workout_plans(user_id: int):
+#     profile = get_user(user_id)
+#     # generate workout plan based on user's fitness level
+#     workout_plan = ["Monday: Chest and Triceps", "Wednesday: Back and Biceps", "Friday: Legs and Shoulders"]
+#     db_workout_plans[user_id] = workout_plan
+#     return workout_plan
+
+def create_workout_plans(workout_data: WorkoutPlan):
+    user_id = len(db_workout_plans) + 1  # Simulate user ID generation
+    db_workout_plans[user_id] = workout_data
+    return workout_data
 
 def get_workout_plan(user_id: int):
     # Placeholder logic for generating a workout plan
@@ -42,6 +47,11 @@ def generate_meal_plan(user_id: int):
     profile = get_user(user_id)
     # generate meal plan based on user's dietary preference from LLM
     meal_plan = ["Breakfast: Oatmeal", "Lunch: Grilled Chicken Salad", "Dinner: Salmon with Vegetables"]
+    db_meal_plans[user_id] = meal_plan
+    return meal_plan
+
+def create_meal_plans(meal_plan: MealPlan):
+    user_id = len(db_meal_plans) + 1  # Simulate user ID generation
     db_meal_plans[user_id] = meal_plan
     return meal_plan
 

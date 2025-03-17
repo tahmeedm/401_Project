@@ -55,7 +55,7 @@ export default function LoginPage() {
       toast({ title: "Success!", description: "Welcome back to FitMate." });
       router.push("/dashboard");
     } catch (error) {
-      toast({ title: "Login failed", description: String(error.message), variant: "destructive" });
+      toast({ title: "Login failed", description: "Invalid Creds", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
