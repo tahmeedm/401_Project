@@ -1,17 +1,26 @@
-from fastapi import APIRouter
-from crud import get_meal_plans, create_meal_plans
+from fastapi import APIRouter, Depends, HTTPException
 from models import MealPlan
+from crud import db_meal_plans, get_current_user
+from llm import generate_meal_plan
+
 router = APIRouter()
 
+@router.post("/meal-plan/")
+def create_meal(meal: MealPlan, user: dict = Depends(get_current_user)):
+    user_email = user["email"]
+    db_meal_plans[user_email] = {
+        "preferences": meal,
+        "generated_plan": generate_meal_plan(meal),  # Simulated AI-generated workout plan
+    }
+    return {"message": "Meal plan created successfully"}
 
-# Generate meal plan (simulated)
-@router.post("/meal-plan")
-def create_meal_plan(meal_plan: MealPlan):
-    meal_id = create_meal_plans(meal_plan)
-    return {"meal Id": meal_id, "meal_plan": meal_plan}
+@router.get("/meal-plan/")
+def get_meal(user: dict = Depends(get_current_user)):
+    user_email = user["email"]
+    
+    # Fetch the workout plan
+    workout_plan = db_meal_plans.get(user_email)
+    if not workout_plan:
+        raise HTTPException(status_code=404, detail="No workout plan found")
 
-# Get meal plan (simulated)
-@router.get("/meal-plan/{user_id}")
-def get_meal_plan(user_id: int):
-    meal_plan = get_meal_plans(user_id)
-    return {"meal_plan": meal_plan}
+    return workout_plan["generated_plan"]

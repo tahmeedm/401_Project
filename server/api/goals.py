@@ -1,21 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import APIRouter, Depends
 from models import FitnessGoal
-from crud import get_goal, create_goal
+from crud import db_goals, get_current_user
+
 router = APIRouter()
 
+@router.post("/goals/")
+def create_goal(goal: FitnessGoal, user: dict = Depends(get_current_user)):
+    db_goals[user["email"]] = goal
+    return {"message": "Goal created successfully"}
 
-# Create Fitness Goal
-@router.post("/goals")
-async def create_fitness_goal(goal: FitnessGoal):
-    goal_id = create_goal(goal)
-    return {"goal_id": goal_id, "goal": goal}
-
-# Get Goal Details
-@router.get("/goals/{goal_id}")
-async def get_fitness_goal(goal_id: int):
-    goal = get_goal(goal_id)
-    if goal is None:
-        raise HTTPException(status_code=404, detail="Goal not found")
-    return goal
+@router.get("/goals/")
+def get_goal(user: dict = Depends(get_current_user)):
+    return db_goals.get(user["email"], {"message": "No goal found"})

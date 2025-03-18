@@ -1,573 +1,466 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowRight, Dumbbell, Plus, Utensils, User } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
-import { format } from "date-fns"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useAuth } from "@/context/auth-context"
+import { Dumbbell, Salad, BarChart3, Clock, ArrowUpRight, ChevronRight, Flame, Trophy } from "lucide-react"
 
-interface UserProfile {
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { DashboardHeader } from "@/components/dashboard-header"
+import { DashboardShell } from "@/components/dashboard-shell"
+import { UserProfileCard } from "@/components/user-profile-card"
+
+type WorkoutPlan = {
+  workout_type: string
+  days_per_week: number
+  equipment_access: string[]
+  workout_duration: string
+  workouts: {
+    day: string
+    exercises: {
+      name: string
+      sets: number
+      reps: number
+      rest: string
+    }[]
+  }[]
+}
+
+type MealPlan = {
+  calories: string
+  allergies: string[]
+  meals: {
+    type: string
+    name: string
+    calories: number
+    protein: number
+    carbs: number
+    fat: number
+  }[]
+}
+
+type ProgressData = {
+  weight: { date: string; value: number }[]
+  workouts_completed: number
+  streak: number
+  calories_burned: number
+  personal_records: { exercise: string; value: string; date: string }[]
+}
+
+type UserProfile = {
   name: string
   age: number
   sex: string
   height: number
   weight: number
   fitness_level: string
-  dietary_preference?: string
+  dietary_preference: string
 }
 
-export default function DashboardPage() {
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80"
+export default function Dashboard() {
+  const { user } = useAuth()
   const router = useRouter()
-  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [waterIntake, setWaterIntake] = useState(3)
-  const [todaySteps, setTodaySteps] = useState(8)
-  const [weeklyWorkouts, setWeeklyWorkouts] = useState(2)
-  const [weeklyGoal, setWeeklyGoal] = useState(4)
-  const [user, setUser] = useState<any>(null)
+  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null)
+  const [mealPlan, setMealPlan] = useState<MealPlan | null>(null)
+  const [progress, setProgress] = useState<ProgressData | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+  const [lastLogin, setLastLogin] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check if user is logged in
-    const currentUser = localStorage.getItem("fitmate_current_user")
-    if (!currentUser) {
-      toast({
-        title: "Authentication required",
-        description: "Please login to access your dashboard.",
-        variant: "destructive",
-      })
+    if (!user) {
       router.push("/login")
       return
     }
 
-    setUser(JSON.parse(currentUser))
+    if (!user.hasProfile) {
+      router.push("/profile-setup")
+      return
+    }
 
-    // Fetch user profile
+    if (!user.hasMealPlan) {
+      router.push("/meal-setup")
+      return
+    }
+
+    // Simulate fetching data
     const fetchData = async () => {
+      setLoading(true)
       try {
-        setLoading(true)
-
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 500))
-
-        // Get profile from localStorage
-        const userProfiles = JSON.parse(localStorage.getItem("fitmate_profiles") || "[]")
-        const userProfile = userProfiles.find((p: any) => p.userId === JSON.parse(currentUser).id)
-
-        if (userProfile) {
-          setProfile(userProfile)
-        } else {
-          // If no profile exists, redirect to profile creation
-          toast({
-            title: "Profile needed",
-            description: "Please complete your profile to access the dashboard.",
-          })
-          router.push("/profile")
-        }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load dashboard data. Please try again.",
-          variant: "destructive",
+        
+        const profileResponse = await fetch(`${API_URL}/api/profile`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         })
+
+        if (!profileResponse.ok) {
+          throw new Error("Failed to fetch profile")
+        }
+
+        const profileData = await profileResponse.json()
+        setUserProfile(profileData)
+
+        // In a real app, these would be actual API calls
+        const workoutResponse = await fetch(`${API_URL}/api/workout-plan`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        })
+
+        if (!workoutResponse.ok) {
+          throw new Error("Failed to fetch workout plan")
+        }
+
+        const workoutData = await workoutResponse.json()
+        setWorkoutPlan(workoutData)
+
+        // Simulated meal plan data
+        const mealPlanResponse = await fetch(`${API_URL}/api/meal-plan`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        })
+
+        if (!mealPlanResponse.ok) {
+          throw new Error("Failed to fetch meal plan")
+        }
+
+        const mealPlanData = await mealPlanResponse.json()
+        setMealPlan(mealPlanData)
+
+        // Simulated progress data
+        setProgress({
+          weight: [
+            { date: "2023-01-01", value: 80 },
+            { date: "2023-01-15", value: 79 },
+            { date: "2023-02-01", value: 78 },
+            { date: "2023-02-15", value: 77 },
+          ],
+          workouts_completed: 24,
+          streak: 5,
+          calories_burned: 12500,
+          personal_records: [
+            { exercise: "Bench Press", value: "80kg", date: "2023-02-10" },
+            { exercise: "Squat", value: "120kg", date: "2023-02-05" },
+            { exercise: "Deadlift", value: "140kg", date: "2023-01-20" },
+          ],
+        })
+
+        // Simulated last login
+        setLastLogin("2023-02-14 18:30")
+      } catch (error) {
+        console.error("Error fetching data:", error)
       } finally {
         setLoading(false)
       }
     }
 
     fetchData()
-  }, [router])
+  }, [user, router])
 
-  const todayWorkout = {
-    name: "Upper Body Strength",
-    exercises: [
-      { name: "Bench Press", sets: "3", reps: "10", weight: "60kg" },
-      { name: "Shoulder Press", sets: "3", reps: "12", weight: "40kg" },
-      { name: "Lat Pulldowns", sets: "3", reps: "12", weight: "50kg" },
-      { name: "Bicep Curls", sets: "3", reps: "15", weight: "15kg" },
-      { name: "Tricep Extensions", sets: "3", reps: "15", weight: "15kg" },
-    ],
-  }
-
-  const todayMeals = {
-    breakfast: "Oatmeal with berries and nuts (350 calories)",
-    snack1: "Greek yogurt with honey (150 calories)",
-    lunch: "Grilled chicken salad with olive oil dressing (450 calories)",
-    snack2: "Apple with almond butter (200 calories)",
-    dinner: "Baked salmon with roasted vegetables (500 calories)",
-  }
-
-  const incrementWater = () => {
-    setWaterIntake((prev) => Math.min(prev + 1, 8))
-    toast({
-      title: "Water intake updated",
-      description: `You've logged ${waterIntake + 1} of 8 glasses today.`,
-    })
-  }
-
-  if (loading) {
-    return (
-      <div className="container mx-auto py-10 px-4 flex items-center justify-center min-h-[60vh]">
-        <div className="text-center">
-          <div className="h-12 w-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your dashboard...</p>
-        </div>
-      </div>
-    )
+  if (!user || !user.hasProfile || !user.hasMealPlan) {
+    return null
   }
 
   return (
-    <div className="container mx-auto py-6 px-4 relative">
-      <div className="absolute inset-0 bg-cyber-grid bg-[size:30px_30px] opacity-10 pointer-events-none"></div>
+    <DashboardShell>
+      <DashboardHeader
+        heading={`Welcome, ${userProfile?.name?.split(" ")[0] || "User"}`}
+        text="View your fitness journey and progress at a glance"
+      >
+        <Button className="bg-cyan-600 hover:bg-cyan-700 transition-colors">
+          Start Workout <ArrowUpRight className="ml-2 h-4 w-4" />
+        </Button>
+      </DashboardHeader>
 
-      {/* Welcome Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-cyber-teal">
-            {loading ? "Loading..." : `Welcome, ${user?.name?.split(" ")[0] || "User"}`}
-          </h1>
-          <p className="text-muted-foreground">{format(new Date(), "EEEE, MMMM do, yyyy")} | Your fitness dashboard</p>
+      {loading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader className="h-20 bg-muted/50"></CardHeader>
+              <CardContent className="h-24 bg-muted/30"></CardContent>
+            </Card>
+          ))}
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/workout-plan">
-            <Button
-              variant="outline"
-              className="gap-2 glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-            >
-              <Plus className="h-4 w-4" /> Update Workout Plan
-            </Button>
-          </Link>
-          <Link href="/meal-plan">
-            <Button
-              variant="outline"
-              className="gap-2 glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-            >
-              <Plus className="h-4 w-4" /> Update Meal Plan
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Weekly Workouts</CardTitle>
-            <Dumbbell className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {weeklyWorkouts} / {weeklyGoal}
-            </div>
-            <div className="flex items-center pt-1">
-              <Progress
-                value={(weeklyWorkouts / weeklyGoal) * 100}
-                className="h-2 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-cyber-teal"
-              />
-              <span className="text-xs text-muted-foreground ml-2">
-                {Math.round((weeklyWorkouts / weeklyGoal) * 100)}%
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total sleep</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-primary"
-            >
-              <path d="M19 5.93 12.73 12 19 18.07" />
-              <path d="M16.27 12 5 12" />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{todaySteps.toLocaleString()}</div>
-            <div className="flex items-center pt-1">
-              <Progress
-                value={Math.min((todaySteps / 8) * 100, 100)}
-                className="h-2 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-cyber-teal"
-              />
-              <span className="text-xs text-muted-foreground ml-2">{Math.round((todaySteps / 8) * 100)}%</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Water Intake</CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-primary"
-            >
-              <path d="M12 2v1" />
-              <path d="M12 7v1" />
-              <path d="M12 12v1" />
-              <path d="M12 17v1" />
-              <path d="M12 22v1" />
-              <path d="m19 5-1.5-1.5" />
-              <path d="m14.5 9.5-1.5-1.5" />
-              <path d="m8.5 3.5 1.5 1.5" />
-              <path d="m3 8 1.5 1.5" />
-              <path d="M3 17h1" />
-              <path d="M8 17h1" />
-              <path d="M13 17h1" />
-              <path d="M18 17h1" />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{waterIntake} / 8</div>
-            <div className="flex items-center justify-between pt-1">
-              <Progress
-                value={(waterIntake / 8) * 100}
-                className="h-2 flex-1 mr-4 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-primary [&>div]:to-cyber-teal"
-              />
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={incrementWater}
-                className="h-7 w-7 p-0 glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Profile</CardTitle>
-            <User className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm">
-              {loading ? (
-                <p>Loading profile...</p>
-              ) : profile ? (
-                <div className="space-y-1">
-                  <p>
-                    <span className="text-muted-foreground">Height:</span> {profile.height} cm
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Weight:</span> {profile.weight} kg
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Level:</span> {profile.fitness_level}
-                  </p>
+      ) : (
+        <>
+          {/* Stats Overview */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Workout Streak</CardTitle>
+                <Flame className="h-4 w-4 text-orange-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{progress?.streak} days</div>
+                <p className="text-xs text-muted-foreground">Keep it up! You're building consistency.</p>
+              </CardContent>
+            </Card>
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Workouts Completed</CardTitle>
+                <Trophy className="h-4 w-4 text-yellow-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{progress?.workouts_completed}</div>
+                <p className="text-xs text-muted-foreground">Total workouts since you started</p>
+              </CardContent>
+            </Card>
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Calories Burned</CardTitle>
+                <Flame className="h-4 w-4 text-red-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {progress?.calories_burned.toLocaleString()}
                 </div>
-              ) : (
-                <p>No profile found</p>
+                <p className="text-xs text-muted-foreground">Total calories burned this month</p>
+              </CardContent>
+            </Card>
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Last Login</CardTitle>
+                <Clock className="h-4 w-4 text-blue-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{lastLogin?.split(" ")[0]}</div>
+                <p className="text-xs text-muted-foreground">at {lastLogin?.split(" ")[1]}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
+            {/* Workout Plan */}
+            <Card className="col-span-4 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="bg-gray-50 dark:bg-gray-800 rounded-t-lg">
+                <CardTitle className="flex items-center text-gray-800 dark:text-white">
+                  <Dumbbell className="mr-2 h-5 w-5 text-cyan-600" /> Today's Workout
+                </CardTitle>
+                <CardDescription>Your personalized workout for today</CardDescription>
+              </CardHeader>
+              <CardContent className="px-2">
+                <div className="space-y-4">
+                  {workoutPlan?.workouts[0].exercises.map((exercise, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-400">
+                        {i + 1}
+                      </div>
+                      <div className="ml-4 space-y-1">
+                        <p className="text-sm font-medium leading-none">{exercise.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {exercise.sets} sets × {exercise.reps} reps • {exercise.rest} rest
+                        </p>
+                      </div>
+                      <div className="ml-auto">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-500 hover:text-cyan-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors">Start Workout</Button>
+              </CardFooter>
+            </Card>
+
+            {/* User Profile Card */}
+            <Card className="col-span-3 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              {userProfile && (
+                <UserProfileCard
+                  name={userProfile.name}
+                  age={userProfile.age}
+                  sex={userProfile.sex}
+                  height={userProfile.height}
+                  weight={userProfile.weight}
+                  fitness_level={userProfile.fitness_level}
+                  dietary_preference={userProfile.dietary_preference}
+                />
               )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </Card>
+          </div>
 
-      {/* Main Dashboard Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          {/* Today's Plan */}
-          <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-            <CardHeader>
-              <CardTitle>Today's Plan</CardTitle>
-              <CardDescription>Your workout and nutrition for today</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="workout" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10">
-                  <TabsTrigger
-                    value="workout"
-                    className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-cyber-teal/20 data-[state=active]:text-primary"
-                  >
-                    <Dumbbell className="h-4 w-4" /> Workout
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="nutrition"
-                    className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/20 data-[state=active]:to-cyber-teal/20 data-[state=active]:text-primary"
-                  >
-                    <Utensils className="h-4 w-4" /> Nutrition
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="workout" className="space-y-4 pt-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-lg">{todayWorkout.name}</h3>
-                    <Link href="/workout-plan">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-                      >
-                        View Full Plan
-                      </Button>
-                    </Link>
-                  </div>
+          {/* Meal Plan */}
+          <div className="mt-4">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="bg-gray-50 dark:bg-gray-800 rounded-t-lg">
+                <CardTitle className="flex items-center text-gray-800 dark:text-white">
+                  <Salad className="mr-2 h-5 w-5 text-blue-600" /> Today's Meals
+                </CardTitle>
+                <CardDescription>Your personalized meal plan for today</CardDescription>
+              </CardHeader>
+              <CardContent className="px-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {mealPlan?.meals.map((meal, i) => (
+                    <div
+                      key={i}
+                      className="flex flex-col p-4 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    >
+                      <div className="flex items-center mb-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400 text-xs">
+                          {meal.type.charAt(0)}
+                        </div>
+                        <div className="ml-2 font-medium">{meal.type}</div>
+                      </div>
+                      <div className="text-sm font-medium mb-2">{meal.name}</div>
+                      <div className="mt-auto">
+                        <div className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">
+                          {meal.calories} calories
+                        </div>
+                        <div className="flex justify-between text-xs text-muted-foreground">
+                          <span className="text-cyan-600 dark:text-cyan-400">P: {meal.protein}g</span>
+                          <span className="text-blue-600 dark:text-blue-400">C: {meal.carbs}g</span>
+                          <span className="text-orange-500">F: {meal.fat}g</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  variant="outline"
+                  className="w-full border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
+                >
+                  View Full Meal Plan
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
 
-                  <div className="space-y-2">
-                    {todayWorkout.exercises.map((exercise, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5"
-                      >
+          {/* Progress Section */}
+          <div className="mt-4">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
+              <CardHeader className="bg-gray-50 dark:bg-gray-800 rounded-t-lg">
+                <CardTitle className="flex items-center text-gray-800 dark:text-white">
+                  <BarChart3 className="mr-2 h-5 w-5 text-blue-600" /> Your Progress
+                </CardTitle>
+                <CardDescription>Track your fitness journey and achievements</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="weight">
+                  <TabsList className="mb-4 bg-gray-100 dark:bg-gray-800">
+                    <TabsTrigger
+                      value="weight"
+                      className="data-[state=active]:bg-white data-[state=active]:text-cyan-600 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-cyan-400"
+                    >
+                      Weight
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="records"
+                      className="data-[state=active]:bg-white data-[state=active]:text-blue-600 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-blue-400"
+                    >
+                      Personal Records
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="activity"
+                      className="data-[state=active]:bg-white data-[state=active]:text-orange-500 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-orange-400"
+                    >
+                      Activity
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="weight">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-medium">{exercise.name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {exercise.sets} sets × {exercise.reps} reps
+                          <p className="text-sm font-medium">Current Weight</p>
+                          {progress?.weight && progress.weight.length > 0 && (
+                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                              {progress.weight[progress.weight.length - 1].value} kg
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Starting Weight</p>
+                          <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
+                            {progress?.weight[0].value} kg
                           </p>
                         </div>
-                        <div className="text-sm font-medium">{exercise.weight}</div>
+                        <div>
+                          <p className="text-sm font-medium">Change</p>
+                          <p className="text-2xl font-bold text-green-500">
+                            {progress && progress.weight && progress.weight.length > 0
+                              ? (progress.weight[0].value - progress.weight[progress.weight.length - 1].value).toFixed(
+                                  1,
+                                )
+                              : 0}{" "}
+                            kg
+                          </p>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="h-[200px] w-full bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                        <p className="text-muted-foreground">Weight chart visualization would go here</p>
+                      </div>
+                    </div>
+                  </TabsContent>
 
-                  <div className="flex justify-center pt-2">
-                    <Link href="/workout-log">
-                      <Button className="gap-2 bg-gradient-to-r from-primary to-cyber-teal hover:shadow-glow transition-all duration-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-clipboard-check"
+                  <TabsContent value="records">
+                    <div className="space-y-4">
+                      {progress?.personal_records.map((record, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                         >
-                          <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-                          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                          <path d="m9 14 2 2 4-4" />
-                        </svg>
-                        Start Workout
-                      </Button>
-                    </Link>
-                  </div>
-                </TabsContent>
-                <TabsContent value="nutrition" className="space-y-4 pt-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-lg">Today's Meal Plan</h3>
-                    <Link href="/meal-plan">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-                      >
-                        View Full Plan
-                      </Button>
-                    </Link>
-                  </div>
+                          <div className="flex items-center">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400">
+                              <Trophy className="h-5 w-5" />
+                            </div>
+                            <div className="ml-4 space-y-1">
+                              <p className="text-sm font-medium leading-none">{record.exercise}</p>
+                              <p className="text-sm text-muted-foreground">Achieved on {record.date}</p>
+                            </div>
+                          </div>
+                          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{record.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </TabsContent>
 
-                  <div className="space-y-3">
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="font-medium">Breakfast</p>
-                      <p className="text-sm text-muted-foreground">{todayMeals.breakfast}</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="font-medium">Morning Snack</p>
-                      <p className="text-sm text-muted-foreground">{todayMeals.snack1}</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="font-medium">Lunch</p>
-                      <p className="text-sm text-muted-foreground">{todayMeals.lunch}</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="font-medium">Afternoon Snack</p>
-                      <p className="text-sm text-muted-foreground">{todayMeals.snack2}</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="font-medium">Dinner</p>
-                      <p className="text-sm text-muted-foreground">{todayMeals.dinner}</p>
-                    </div>
-                  </div>
+                  <TabsContent value="activity">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Weekly Goal</p>
+                          <p className="text-2xl font-bold text-orange-500">{workoutPlan?.days_per_week} workouts</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">This Week</p>
+                          <p className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">3 workouts</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Progress</p>
+                          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            {workoutPlan ? Math.round((3 / workoutPlan.days_per_week) * 100) : 0}%
+                          </p>
+                        </div>
+                      </div>
 
-                  <div className="flex justify-center pt-2">
-                    <Link href="/meal-log">
-                      <Button className="gap-2 bg-gradient-to-r from-primary to-cyber-teal hover:shadow-glow transition-all duration-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-clipboard-check"
-                        >
-                          <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-                          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                          <path d="m9 14 2 2 4-4" />
-                        </svg>
-                        Log Meals
-                      </Button>
-                    </Link>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Update your fitness data or create new plans</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Link href="/profile">
-                  <Button className="w-full glass-effect text-gray-700 border-white/10 hover:shadow-glow transition-all duration-300 bg-white/5 hover:bg-white/10">
-                    Update Profile
-                  </Button>
-                </Link>
-                <Link href="/workout-plan">
-                  <Button className="w-full glass-effect text-gray-700 border-white/10 hover:shadow-glow transition-all duration-300 bg-white/5 hover:bg-white/10">
-                    Modify Workout Plan
-                  </Button>
-                </Link>
-                <Link href="/meal-plan">
-                  <Button className="w-full glass-effect text-gray-700 border-white/10 hover:shadow-glow transition-all duration-300 bg-white/5 hover:bg-white/10">
-                    Modify Meal Plan
-                  </Button>
-                </Link>
-                <Link href="/progress">
-                  <Button className="w-full glass-effect text-gray-700 border-white/10 hover:shadow-glow transition-all duration-300 bg-white/5 hover:bg-white/10">
-                    View Progress
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-8">
-          {/* Profile Summary */}
-          <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-            <CardHeader className="pb-3">
-              <CardTitle>Profile Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {loading ? (
-                <div className="h-[150px] animate-pulse bg-white/5 rounded-md" />
-              ) : profile ? (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-primary/20 to-cyber-teal/20 flex items-center justify-center border border-white/10 shadow-glow">
-                      <User className="h-8 w-8 text-primary" />
+                      <div className="h-[200px] w-full bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                        <p className="text-muted-foreground">Activity chart visualization would go here</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-lg">{profile.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        {profile.age} years •{" "}
-                        {profile.sex === "male" ? "Male" : profile.sex === "female" ? "Female" : profile.sex}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="text-xs text-muted-foreground">Height</p>
-                      <p className="font-medium">{profile.height} cm</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="text-xs text-muted-foreground">Weight</p>
-                      <p className="font-medium">{profile.weight} kg</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="text-xs text-muted-foreground">BMI</p>
-                      <p className="font-medium">{(profile.weight / Math.pow(profile.height / 100, 2)).toFixed(1)}</p>
-                    </div>
-                    <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                      <p className="text-xs text-muted-foreground">Fitness Level</p>
-                      <p className="font-medium capitalize">{profile.fitness_level}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center">
-                    <Link href="/profile">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1 glass-effect border-white/10 hover:shadow-glow transition-all duration-300"
-                      >
-                        Edit Profile <ArrowRight className="h-3 w-3" />
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-6">
-                  <p className="text-muted-foreground mb-4">No profile found</p>
-                  <Link href="/profile">
-                    <Button className="bg-gradient-to-r from-primary to-cyber-teal hover:shadow-glow transition-all duration-300">
-                      Create Profile
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Session Info */}
-          <Card className="glass-effect border-white/10 hover:shadow-glow transition-all duration-300">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-primary"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                </svg>
-                Session Info
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                  <p className="text-xs text-muted-foreground">Session Status</p>
-                  <p className="font-medium text-green-400">Active</p>
-                </div>
-                <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                  <p className="text-xs text-muted-foreground">Last Login</p>
-                  <p className="font-medium">{format(new Date(), "MMM d, yyyy h:mm a")}</p>
-                </div>
-                <div className="p-3 bg-white/5 backdrop-blur-sm rounded-md border border-white/5">
-                  <p className="text-xs text-muted-foreground">Data Saved</p>
-                  <p className="font-medium">Profile, Meal Plan, Workout Plan</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
+    </DashboardShell>
   )
 }
 

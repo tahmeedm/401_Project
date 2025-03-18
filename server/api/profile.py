@@ -1,22 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import Optional
+from fastapi import APIRouter, Depends
 from models import UserProfile
-from crud import get_user, create_user
+from crud import db_users, get_current_user
 
 router = APIRouter()
 
+@router.post("/profile/")
+def create_profile(profile: UserProfile, user: dict = Depends(get_current_user)):
+    db_users[user["email"]] = profile
+    return {"message": "Profile created successfully"}
 
-# Create User Profile
-@router.post("/profile")
-async def create_user_profile(profile: UserProfile):
-    user_id = create_user(profile)
-    return {"user_id": user_id, "profile": profile}
-
-# Get User Profile
-@router.get("/profile")
-async def get_user_profile(user_id: int):
-    profile = get_user(user_id)
-    if profile is None:
-        raise HTTPException(status_code=404, detail="Profile not found")
-    return profile
+@router.get("/profile/")
+def get_profile(user: dict = Depends(get_current_user)):
+    return db_users.get(user["email"], {"message": "Profile not found"})

@@ -1,29 +1,23 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
+import { Dumbbell, ArrowLeft } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { toast } from "@/hooks/use-toast"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import Link from "next/link"
-import { Dumbbell } from "lucide-react"
+import { useAuth } from "@/context/auth-context"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 const formSchema = z
   .object({
-    name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
-    }),
-    email: z.string().email({
-      message: "Please enter a valid email address.",
-    }),
-    password: z.string().min(6, {
-      message: "Password must be at least 6 characters.",
-    }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -31,14 +25,14 @@ const formSchema = z
     path: ["confirmPassword"],
   })
 
-export default function RegisterPage() {
+export default function Register() {
+  const { register, loading, error } = useAuth()
+  const [serverError, setServerError] = useState<string | null>(null)
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -46,137 +40,104 @@ export default function RegisterPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-  
+    setServerError(null)
     try {
-      const res = await fetch(`http://localhost:80/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          password: values.password,
-        }),
-      });
-  
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.detail || "Registration failed");
-      }
-  
-      toast({
-        title: "Registration successful!",
-        description: "Your account has been created. You can now log in.",
-      });
-  
-      router.push("/profile");
-    } catch (error: any) {
-      toast({
-        title: "Registration failed",
-        description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+      await register(values.email, values.password)
+    } catch (err) {
+      setServerError(err instanceof Error ? err.message : "Registration failed")
     }
   }
-  
 
   return (
-    <div className="container mx-auto py-10 px-4 flex flex-col items-center justify-center min-h-[80vh]">
-      <div className="flex items-center gap-2 font-bold text-xl mb-8">
-        <div className="h-10 w-10 rounded-md bg-gradient-to-br from-primary to-cyber-teal flex items-center justify-center shadow-glow">
-          <Dumbbell className="h-6 w-6 text-primary-foreground" />
+    <div className="container flex flex-col items-center justify-center min-h-screen py-12 bg-gradient-to-b from-white to-cyan-50 dark:from-gray-900 dark:to-gray-800">
+      <Link
+        href="/"
+        className="absolute left-4 top-4 md:left-8 md:top-8 flex items-center text-sm font-medium text-muted-foreground hover:text-cyan-500 transition-colors"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to home
+      </Link>
+
+      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="flex flex-col space-y-2 text-center">
+          <div className="flex justify-center">
+            <Dumbbell className="h-8 w-8 text-cyan-500" />
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-500">
+            Create an account
+          </h1>
+          <p className="text-sm text-muted-foreground">Enter your email below to create your account</p>
         </div>
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-cyber-teal text-2xl">
-          FitMate
-        </span>
-      </div>
 
-      <Card className="max-w-md w-full glass-effect border-white/10">
-        <CardHeader>
-          <CardTitle className="text-2xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-cyber-teal">
-            Create an Account
-          </CardTitle>
-          <CardDescription>Register to start your fitness journey with FitMate</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John Doe" {...field} className="glass-effect border-white/10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+        <Card className="professional-card shadow-md">
+          <CardContent className="pt-6">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="you@example.com" {...field} className="professional-input" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} className="professional-input" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} className="professional-input" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {(error || serverError) && (
+                  <div className="text-sm font-medium text-destructive">{error || serverError}</div>
                 )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="you@example.com" {...field} className="glass-effect border-white/10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} className="glass-effect border-white/10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" placeholder="••••••" {...field} className="glass-effect border-white/10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-primary to-cyber-teal hover:shadow-glow transition-all duration-300"
-                disabled={isLoading}
+                <Button
+                  type="submit"
+                  className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors"
+                  disabled={loading}
+                >
+                  {loading ? "Creating account..." : "Create account"}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <div className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300 transition-colors"
               >
-                {isLoading ? "Creating account..." : "Register"}
-              </Button>
-
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link href="/login" className="text-primary hover:underline">
-                  Login
-                </Link>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+                Sign in
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   )
 }
