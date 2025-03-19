@@ -1,0 +1,67 @@
+{
+    "workout": [
+        {
+            "day": "Monday",
+            "exercises": [
+                "Barbell Bench Press: 4 sets of 6-8 reps with 90 seconds rest",
+                "Incline Dumbbell Press: 3 sets of 8-12 reps with 75 seconds rest",
+                "Decline Dumbbell Press: 3 sets of 8-12 reps with 75 seconds rest",
+                "Dumbbell Flyes: 3 sets of 12-15 reps with 60 seconds rest",
+                "Overhead Triceps Extension: 3 sets of 10-15 reps with 60 seconds rest",
+                "Close-Grip Bench Press: 3 sets of 8-12 reps with 75 seconds rest"
+            ]
+        },
+        {
+            "day": "Tuesday",
+            "exercises": [
+                "Barbell Squats: 4 sets of 6-8 reps with 120 seconds rest",
+                "Romanian Deadlifts (RDLs): 3 sets of 8-12 reps with 90 seconds rest",
+                "Leg Press: 3 sets of 12-15 reps with 75 seconds rest",
+                "Leg Extensions: 3 sets of 15-20 reps with 60 seconds rest",
+                "Hamstring Curls: 3 sets of 15-20 reps with 60 seconds rest",
+                "Calf Raises (Standing or Seated): 4 sets of 15-20 reps with 60 seconds rest"
+            ]
+        },
+        {
+            "day": "Wednesday",
+            "exercises": [
+                "Rest or Active Recovery (Light Cardio, Stretching)"
+            ]
+        },
+        {
+            "day": "Thursday",
+            "exercises": [
+                "Barbell Overhead Press: 4 sets of 6-8 reps with 90 seconds rest",
+                "Lateral Raises: 3 sets of 10-15 reps with 60 seconds rest",
+                "Front Raises: 3 sets of 10-15 reps with 60 seconds rest",
+                "Bent-Over Rear Delt Flyes: 3 sets of 12-15 reps with 60 seconds rest",
+                "Pull-ups (or Lat Pulldowns): 3 sets to failure (or 8-12 reps) with 75 seconds rest",
+                "Barbell Rows: 3 sets of 8-12 reps with 90 seconds rest",
+                "Face Pulls: 3 sets of 15-20 reps with 60 seconds rest"
+            ]
+        },
+        {
+            "day": "Friday",
+            "exercises": [
+                "Deadlifts: 1 set of 5 reps, 1 set of 3 reps, 1 set of 1 rep with 180 seconds rest between each set (focus on form, gradually increase weight)",
+                "Pull-ups (or Lat Pulldowns): 3 sets to failure (or 8-12 reps) with 75 seconds rest",
+                "Barbell Rows: 3 sets of 8-12 reps with 90 seconds rest",
+                "Seated Cable Rows: 3 sets of 10-15 reps with 75 seconds rest",
+                "Bicep Curls (Barbell or Dumbbell): 3 sets of 8-12 reps with 60 seconds rest",
+                "Hammer Curls: 3 sets of 10-15 reps with 60 seconds rest"
+            ]
+        },
+        {
+            "day": "Saturday",
+            "exercises": [
+                "Rest or Active Recovery (Light Cardio, Stretching)"
+            ]
+        },
+        {
+            "day": "Sunday",
+            "exercises": [
+                "Optional: Full Body Circuit (Choose 6-8 exercises like push-ups, squats, rows, planks, etc. Perform 3 rounds of 10-15 reps per exercise with short rest periods between exercises and rounds)."
+            ]
+        }
+    ]
+}
