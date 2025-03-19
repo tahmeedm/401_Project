@@ -51,7 +51,7 @@ export default function Home() {
             <div className="flex justify-center">
               <div className="relative w-full max-w-[500px] aspect-square rounded-lg overflow-hidden shadow-lg">
                 <img
-                  src="/placeholder.svg?height=600&width=600"
+                  src="https://img.freepik.com/premium-photo/man-running-treadmill-with-words-muscular-muscular_71956-45543.jpg"
                   alt="Fitness Training"
                   className="object-cover w-full h-full"
                 />

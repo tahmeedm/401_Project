@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models import WorkoutPlan
 from crud import db_workout_plans, get_current_user
-from llm import generate_workout
+from llm import generate_workout, generate_new_workout
 
 router = APIRouter()
 @router.post("/workout-plan/")
@@ -27,3 +27,9 @@ def get_workout(user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="No workout plan found")
 
     return workout_plan["generated_plan"]
+
+@router.get("/generate-new-workout/")
+def update_workout(user: dict = Depends(get_current_user)):
+    user_email = user["email"]
+
+    return generate_new_workout()

@@ -11,6 +11,7 @@ db_goals = {}
 db_workout_plans = {}
 db_meal_plans = {}
 auth_db = {}
+db_progress = {}
 
 # Security Setup
 SECRET_KEY = "supersecretkey"

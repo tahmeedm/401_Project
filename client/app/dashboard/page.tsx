@@ -46,6 +46,7 @@ type ProgressData = {
   workouts_completed: number
   streak: number
   calories_burned: number
+  last_workout_day: number
   personal_records: { exercise: string; value: string; date: string }[]
 }
 
@@ -90,7 +91,7 @@ export default function Dashboard() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        
+
         const profileResponse = await fetch(`${API_URL}/api/profile`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -132,23 +133,19 @@ export default function Dashboard() {
         const mealPlanData = await mealPlanResponse.json()
         setMealPlan(mealPlanData)
 
-        // Simulated progress data
-        setProgress({
-          weight: [
-            { date: "2023-01-01", value: 80 },
-            { date: "2023-01-15", value: 79 },
-            { date: "2023-02-01", value: 78 },
-            { date: "2023-02-15", value: 77 },
-          ],
-          workouts_completed: 24,
-          streak: 5,
-          calories_burned: 12500,
-          personal_records: [
-            { exercise: "Bench Press", value: "80kg", date: "2023-02-10" },
-            { exercise: "Squat", value: "120kg", date: "2023-02-05" },
-            { exercise: "Deadlift", value: "140kg", date: "2023-01-20" },
-          ],
+        // fetch progress data
+        const progressResponse = await fetch(`${API_URL}/api/progress`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
         })
+
+        if (!progressResponse.ok) {
+          throw new Error("Failed to fetch progress data")
+        }
+
+        const progressData = await progressResponse.json()
+        setProgress(progressData)
 
         // Simulated last login
         setLastLogin("2023-02-14 18:30")
@@ -162,9 +159,91 @@ export default function Dashboard() {
     fetchData()
   }, [user, router])
 
-  if (!user || !user.hasProfile || !user.hasMealPlan) {
-    return null
-  }
+
+  const handleWorkoutComplete = async () => {
+    if (!progress) return;
+
+    try {
+      // Get today's date as YYYYMMDD integer
+      const today = new Date();
+      const formattedToday = parseInt(
+        `${today.getFullYear()}${(today.getMonth() + 1).toString().padStart(2, "0")}${today.getDate().toString().padStart(2, "0")}`
+      );
+
+      let newStreak = progress.streak;
+
+      // Check if the API provides last_workout_day
+      if (progress.last_workout_day) {
+        const lastWorkoutDay = progress.last_workout_day;
+
+        if (formattedToday === lastWorkoutDay) {
+          // Same day workout, don't increase streak
+          newStreak = progress.streak;
+        } else if (formattedToday === lastWorkoutDay + 1) {
+          // Consecutive day, increase streak
+          newStreak = progress.streak + 1;
+        } else {
+          // Missed a day, reset streak
+          newStreak = 1;
+        }
+      }
+
+      // Update progress
+      const updatedProgress = {
+        ...progress,
+        workouts_completed: progress.workouts_completed + 1,
+        streak: newStreak,
+        calories_burned: progress.calories_burned + 300,
+        last_workout_day: formattedToday,
+      };
+
+      const response = await fetch(`${API_URL}/api/progress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify(updatedProgress),
+      });
+      console.log(user)
+
+      if (!response.ok) {
+        throw new Error("Failed to finish workout");
+      }
+
+      const popup = document.createElement("div");
+      popup.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
+      popup.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
+          <div class="animate-bounce text-green-500 text-4xl">✔</div>
+          <p class="mt-2 text-gray-700">Workout Completed!</p>
+          <p class="mt-2 text-gray-700">Streak: ${newStreak}</p>
+        </div>
+      `;
+      document.body.appendChild(popup);
+
+      // Close popup after animation and update the state
+      setTimeout(() => {
+        document.body.removeChild(popup);
+        setProgress(updatedProgress);
+      }, 2000);
+      // Fetch a new workout plan after completing the workout
+      const newWorkoutResponse = await fetch(`${API_URL}/api/generate-new-workout`, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+
+      if (!newWorkoutResponse.ok) {
+        throw new Error("Failed to fetch new workout plan");
+      }
+
+      const newWorkoutData = await newWorkoutResponse.json();
+      setWorkoutPlan(newWorkoutData);
+    } catch (error) {
+      console.error("Error finishing workout:", error);
+    }
+  };
 
   return (
     <DashboardShell>
@@ -172,9 +251,13 @@ export default function Dashboard() {
         heading={`Welcome, ${userProfile?.name?.split(" ")[0] || "User"}`}
         text="View your fitness journey and progress at a glance"
       >
-        <Button className="bg-cyan-600 hover:bg-cyan-700 transition-colors">
-          Start Workout <ArrowUpRight className="ml-2 h-4 w-4" />
+        <Button
+          className="bg-cyan-600 hover:bg-cyan-700 transition-colors"
+          onClick={handleWorkoutComplete}
+        >
+          Finish Workout <ArrowUpRight className="ml-2 h-4 w-4" />
         </Button>
+
       </DashboardHeader>
 
       {loading ? (
@@ -274,7 +357,9 @@ export default function Dashboard() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors">Start Workout</Button>
+                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors"
+                  onClick={handleWorkoutComplete}
+                >Finish Workout</Button>
               </CardFooter>
             </Card>
 
@@ -331,14 +416,6 @@ export default function Dashboard() {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button
-                  variant="outline"
-                  className="w-full border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
-                >
-                  View Full Meal Plan
-                </Button>
-              </CardFooter>
             </Card>
           </div>
 
@@ -395,8 +472,8 @@ export default function Dashboard() {
                           <p className="text-2xl font-bold text-green-500">
                             {progress && progress.weight && progress.weight.length > 0
                               ? (progress.weight[0].value - progress.weight[progress.weight.length - 1].value).toFixed(
-                                  1,
-                                )
+                                1,
+                              )
                               : 0}{" "}
                             kg
                           </p>
@@ -463,4 +540,3 @@ export default function Dashboard() {
     </DashboardShell>
   )
 }
-

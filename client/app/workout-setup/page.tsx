@@ -18,12 +18,7 @@ import { ApiError } from "next/dist/server/api-utils"
 
 const formSchema = z.object({
   workout_type: z.string().min(1, { message: "Please select a workout type" }),
-  days_per_week: z.coerce
-    .number()
-    .min(1, { message: "You must work out at least 1 day per week" })
-    .max(7, { message: "You can't work out more than 7 days per week" }),
   equipment_access: z.array(z.string()).min(1, { message: "Please select at least one equipment option" }),
-  workout_duration: z.string().min(1, { message: "Please select a workout duration" }),
 })
 var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80"
 const equipmentOptions = [
@@ -55,9 +50,7 @@ export default function WorkoutSetup() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       workout_type: "",
-      days_per_week: 3,
       equipment_access: [],
-      workout_duration: "",
     },
   })
 
@@ -149,21 +142,6 @@ export default function WorkoutSetup() {
 
               <FormField
                 control={form.control}
-                name="days_per_week"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Days Per Week</FormLabel>
-                    <FormControl>
-                      <Input type="number" min={1} max={7} placeholder="3" {...field} className="professional-input" />
-                    </FormControl>
-                    <FormDescription>How many days per week can you commit to working out?</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name="equipment_access"
                 render={() => (
                   <FormItem>
@@ -200,31 +178,6 @@ export default function WorkoutSetup() {
                         />
                       ))}
                     </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="workout_duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Workout Duration</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger className="professional-input">
-                          <SelectValue placeholder="Select your preferred workout duration" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="short">Short (15-30 minutes)</SelectItem>
-                        <SelectItem value="medium">Medium (30-45 minutes)</SelectItem>
-                        <SelectItem value="long">Long (45-60 minutes)</SelectItem>
-                        <SelectItem value="extended">Extended (60+ minutes)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>How long do you want each workout session to be?</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

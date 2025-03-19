@@ -33,7 +33,7 @@ export default function Login() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setServerError(null)
     try {
-      await login(values.email, values.password)
+      const loginResult = await login(values.email, values.password)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Login failed")
     }

@@ -25,10 +25,17 @@ class FitnessGoal(BaseModel):
 
 class WorkoutPlan(BaseModel):
     workout_type: str
-    days_per_week: int
     equipment_access: List[str]
-    workout_duration: str
 
 class MealPlan(BaseModel):
     calories: str = Field(..., pattern="^(low|medium|high)$", description="Caloric intake preference")
     allergies: List[str] = Field(default=[], description="List of allergies")
+
+
+class Progress(BaseModel):
+    weight: List[dict]
+    workouts_completed: int
+    streak: int
+    calories_burned: int
+    last_workout_day: int
+    personal_records: List[dict]
