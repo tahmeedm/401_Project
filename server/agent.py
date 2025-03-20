@@ -7,8 +7,11 @@ from threading import Lock
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.exceptions import OutputParserException
+from pydantic import ValidationError
 
 from server.prompts import DIET_PLAN_PROMPT, WORKOUT_PLAN_PROMPT
+from server.models import ServerDietResponse, ServerWorkoutResponse
 
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
@@ -42,27 +45,98 @@ class WorkoutTrainer:
         self.parser = JsonOutputParser()
 
     def generate_workout_plan(
-        self, goal="general fitness", biometrics="not provided"
+        self, goal="general fitness", biometrics="not provided", max_retries=3
     ):
-        """Generate a workout plan based on user goals."""
-        response = self.llm.invoke(
-            WORKOUT_PLAN_PROMPT.format(goal=goal, biometrics=biometrics)
-        )
-        return self.parser.parse(response.content)
+        """
+        Generate a workout plan based on user goals.
+
+        Args:
+            goal (str, optional): The fitness goal for which the workout plan is being generated.
+                Defaults to "general fitness".
+            biometrics (str, optional): The user's biometric information, such as age, weight,
+                and height. Defaults to "not provided".
+            max_retries (int, optional): The maximum number of retries to attempt if the
+               API call fails. Defaults to 3.
+
+        Returns:
+            dict: A dictionary containing the generated workout plan.
+        """
+        retry = max_retries
+        while retry > 0:
+            try:
+                response = self.llm.invoke(
+                    WORKOUT_PLAN_PROMPT.format(goal=goal, biometrics=biometrics)
+                )
+
+                # Parse and validate
+                output = self.parser.parse(response.content)
+                ServerWorkoutResponse(**output)
+
+                return output
+            except OutputParserException as e:
+                print(
+                    f"OutputParserException occurred: {e}. Retrying ({retry})..."
+                )
+                retry -= 1
+            except ValidationError as e:
+                print(f"ValidationError occurred: {e}. Retrying ({retry})...")
+                retry -= 1
+
+        return {
+            "error": f"Failed to generate workout plan after {max_retries} retries"
+        }
 
     def generate_diet_plan(
-        self, goal, biometrics, dietary_preferences="balanced"
+        self,
+        goal="general fitness",
+        biometrics="not provided",
+        dietary_preferences="balanced",
+        max_retries=3,
     ):
-        """Generate a diet plan based on user preferences."""
-        response = self.llm.invoke(
-            DIET_PLAN_PROMPT.format(
-                goal=goal,
-                biometrics=biometrics,
-                dietary_preferences=dietary_preferences,
-            ),
-        )
+        """
+        Generate a diet plan based on user preferences.
 
-        return self.parser.parse(response.content)
+        Args:
+            goal (str, optional): The health or fitness goal for which the diet plan is
+                being generated. Defaults to "general fitness".
+            biometrics (str, optional): The user's biometric information, such as age, weight,
+                and height. Defaults to "not provided".
+            dietary_preferences (str, optional): The user's dietary preferences, such as
+                vegetarian, vegan, etc. Defaults to "balanced".
+            max_retries (int, optional): The maximum number of retries to attempt if the
+                API call fails. Defaults to 3.
+
+        Returns:
+            dict: A dictionary containing the generated diet plan.
+        """
+        retry = max_retries
+        while retry > 0:
+            try:
+                response = self.llm.invoke(
+                    DIET_PLAN_PROMPT.format(
+                        goal=goal,
+                        biometrics=biometrics,
+                        dietary_preferences=dietary_preferences,
+                    ),
+                )
+
+                # Parse and Validate
+                output = self.parser.parse(response.content)
+                ServerDietResponse(**output)
+
+                return output
+            except OutputParserException as e:
+                print(
+                    f"OutputParserException occurred: {e}. Retrying ({retry})..."
+                )
+                retry -= 1
+            except ValidationError as e:
+                print(f"ValidationError occurred: {e}. Retrying ({retry})...")
+                retry -= 1
+
+        return {
+            "error": f"Failed to generate diet plan after {max_retries} retries"
+        }
 
 
 if __name__ == "__main__":

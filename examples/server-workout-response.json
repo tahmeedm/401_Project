@@ -6,32 +6,32 @@
                 {
                     "name": "Barbell Bench Press",
                     "sets": 3,
-                    "reps": 6,
-                    "rest": "2 minutes"
+                    "reps": 8,
+                    "rest": 90
                 },
                 {
                     "name": "Incline Dumbbell Press",
                     "sets": 3,
-                    "reps": 8,
-                    "rest": "90 seconds"
+                    "reps": 10,
+                    "rest": 90
                 },
                 {
                     "name": "Dumbbell Flyes",
                     "sets": 3,
-                    "reps": 10,
-                    "rest": "75 seconds"
+                    "reps": 12,
+                    "rest": 60
                 },
                 {
-                    "name": "Overhead Press",
-                    "sets": 3,
-                    "reps": 6,
-                    "rest": "2 minutes"
-                },
-                {
-                    "name": "Lateral Raises",
+                    "name": "Overhead Triceps Extension",
                     "sets": 3,
                     "reps": 12,
-                    "rest": "60 seconds"
+                    "rest": 60
+                },
+                {
+                    "name": "Close-Grip Bench Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
                 }
             ]
         },
@@ -39,34 +39,34 @@
             "day": "Tuesday",
             "exercises": [
                 {
-                    "name": "Barbell Squats",
-                    "sets": 3,
-                    "reps": 6,
-                    "rest": "2 minutes"
-                },
-                {
-                    "name": "Romanian Deadlifts",
+                    "name": "Barbell Back Squats",
                     "sets": 3,
                     "reps": 8,
-                    "rest": "90 seconds"
+                    "rest": 90
                 },
                 {
                     "name": "Leg Press",
                     "sets": 3,
                     "reps": 10,
-                    "rest": "75 seconds"
+                    "rest": 90
                 },
                 {
                     "name": "Leg Extensions",
                     "sets": 3,
                     "reps": 12,
-                    "rest": "60 seconds"
+                    "rest": 60
                 },
                 {
                     "name": "Hamstring Curls",
                     "sets": 3,
                     "reps": 12,
-                    "rest": "60 seconds"
+                    "rest": 60
+                },
+                {
+                    "name": "Calf Raises",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
                 }
             ]
         },
@@ -76,38 +76,32 @@
                 {
                     "name": "Pull-ups (or Lat Pulldowns)",
                     "sets": 3,
-                    "reps": "As many as possible (AMRAP) / 8",
-                    "rest": "90 seconds"
+                    "reps": 8,
+                    "rest": 90
                 },
                 {
                     "name": "Barbell Rows",
                     "sets": 3,
-                    "reps": 6,
-                    "rest": "2 minutes"
+                    "reps": 10,
+                    "rest": 90
                 },
                 {
                     "name": "Seated Cable Rows",
                     "sets": 3,
-                    "reps": 8,
-                    "rest": "90 seconds"
-                },
-                {
-                    "name": "Face Pulls",
-                    "sets": 3,
-                    "reps": 15,
-                    "rest": "60 seconds"
+                    "reps": 12,
+                    "rest": 60
                 },
                 {
                     "name": "Bicep Curls",
                     "sets": 3,
-                    "reps": 10,
-                    "rest": "60 seconds"
+                    "reps": 12,
+                    "rest": 60
                 },
                 {
                     "name": "Hammer Curls",
                     "sets": 3,
                     "reps": 10,
-                    "rest": "60 seconds"
+                    "rest": 60
                 }
             ]
         },
@@ -117,38 +111,32 @@
                 {
                     "name": "Overhead Press",
                     "sets": 3,
-                    "reps": 6,
-                    "rest": "2 minutes"
-                },
-                {
-                    "name": "Incline Dumbbell Press",
-                    "sets": 3,
                     "reps": 8,
-                    "rest": "90 seconds"
-                },
-                {
-                    "name": "Dumbbell Flyes",
-                    "sets": 3,
-                    "reps": 10,
-                    "rest": "75 seconds"
+                    "rest": 90
                 },
                 {
                     "name": "Lateral Raises",
                     "sets": 3,
                     "reps": 12,
-                    "rest": "60 seconds"
+                    "rest": 60
                 },
                 {
-                    "name": "Triceps Pushdowns",
+                    "name": "Front Raises",
                     "sets": 3,
                     "reps": 12,
-                    "rest": "60 seconds"
+                    "rest": 60
                 },
                 {
-                    "name": "Overhead Triceps Extensions",
+                    "name": "Face Pulls",
                     "sets": 3,
-                    "reps": 12,
-                    "rest": "60 seconds"
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Arnold Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
                 }
             ]
         },
@@ -159,25 +147,25 @@
                     "name": "Deadlifts",
                     "sets": 1,
                     "reps": 5,
-                    "rest": "3 minutes"
+                    "rest": 120
                 },
                 {
                     "name": "Romanian Deadlifts",
                     "sets": 3,
-                    "reps": 8,
-                    "rest": "90 seconds"
+                    "reps": 10,
+                    "rest": 90
                 },
                 {
                     "name": "Good Mornings",
                     "sets": 3,
-                    "reps": 10,
-                    "rest": "75 seconds"
+                    "reps": 12,
+                    "rest": 60
                 },
                 {
-                    "name": "Calf Raises",
-                    "sets": 4,
+                    "name": "Hyperextensions",
+                    "sets": 3,
                     "reps": 15,
-                    "rest": "60 seconds"
+                    "rest": 60
                 }
             ]
         },
@@ -185,10 +173,10 @@
             "day": "Saturday",
             "exercises": [
                 {
-                    "name": "Rest or Active Recovery (e.g., light cardio, stretching)",
+                    "name": "Rest or Active Recovery (light cardio, stretching)",
                     "sets": 0,
                     "reps": 0,
-                    "rest": "N/A"
+                    "rest": 0
                 }
             ]
         },
@@ -196,10 +184,10 @@
             "day": "Sunday",
             "exercises": [
                 {
-                    "name": "Rest or Active Recovery (e.g., light cardio, stretching)",
+                    "name": "Rest or Active Recovery (light cardio, stretching)",
                     "sets": 0,
                     "reps": 0,
-                    "rest": "N/A"
+                    "rest": 0
                 }
             ]
         }
