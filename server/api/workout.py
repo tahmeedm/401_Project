@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from models import WorkoutPlan
-from crud import db_workout_plans, get_current_user
+from crud import db_workout_plans, db_users, get_current_user
 from llm import generate_workout, generate_new_workout
 
 router = APIRouter()
@@ -11,7 +11,7 @@ def create_workout(workout: WorkoutPlan, user: dict = Depends(get_current_user))
     # Store workout preferences
     db_workout_plans[user_email] = {
         "preferences": workout,
-        "generated_plan": generate_workout(workout),  # Simulated AI-generated workout plan
+        "generated_plan": generate_workout(workout, db_users[user_email]),  # Simulated AI-generated workout plan
     }
 
     return {"message": "Workout plan created successfully"}
@@ -32,4 +32,7 @@ def get_workout(user: dict = Depends(get_current_user)):
 def update_workout(user: dict = Depends(get_current_user)):
     user_email = user["email"]
 
-    return generate_new_workout()
+    workout = generate_workout(db_workout_plans[user_email]["preferences"], db_users[user_email])
+    db_workout_plans[user_email]["generated_plan"] = workout
+
+    return workout

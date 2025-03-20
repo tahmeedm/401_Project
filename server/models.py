@@ -39,3 +39,46 @@ class Progress(BaseModel):
     calories_burned: int
     last_workout_day: int
     personal_records: List[dict]
+
+class Exercise(BaseModel):
+    """A model representing an exercise."""
+
+    name: str
+    sets: int
+    reps: int
+    rest: int
+
+class Workout(BaseModel):
+    """A model representing a workout of a day."""
+
+    day: str
+    exercises: List[Exercise]
+
+class ServerWorkoutResponse(BaseModel):
+    """A model representing the response from the server for a 7-day workout plan."""
+
+    workout: List[Workout]
+
+
+# Define the models for Diet
+class Meal(BaseModel):
+    """A model representing a meal in the diet plan."""
+
+    type: str
+    name: str
+    calories: int
+    carbs: int
+    protein: int
+    fat: int
+
+
+class DayDietPlan(BaseModel):
+    """A model representing a day's diet plan."""
+
+    day: str
+    meals: List[Meal]
+
+class ServerDietResponse(BaseModel):
+    """A model representing the response from the server for a 7-day diet plan."""
+
+    diet_plan: List[DayDietPlan]
