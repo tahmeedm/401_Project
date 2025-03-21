@@ -1,26 +1,43 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from schemas import MealPlanModel, UserRequest
 from models import MealPlan
-from crud import db_meal_plans,db_workout_plans, db_users, get_current_user
+from crud import get_profile, get_current_user, get_workout_plan, create_meal_plan, update_meal_plan, get_meal_plan
+from database import get_db  # Assuming you have a function to get DB session
+from fastapi import Depends
 from llm import generate_meal_plan
 
 router = APIRouter()
 
 @router.post("/meal-plan/")
-def create_meal(meal: MealPlan, user: dict = Depends(get_current_user)):
-    user_email = user["email"]
-    db_meal_plans[user_email] = {
-        "preferences": meal,
-        "generated_plan": generate_meal_plan(db_workout_plans[user_email], meal, db_users[user_email]),  # Simulated AI-generated workout plan
-    }
-    return {"message": "Meal plan created successfully"}
+def create_meal(meal: MealPlanModel, db: Session = Depends(get_db), user: UserRequest = Depends(get_current_user)):
+    user_email = user.email
+    # Retrieve user profile
+    profile = get_profile(db, user_email)
+    # retrieve workout plan
+    workout_plan = get_workout_plan(db, user_email)
+
+    generated_meal = generate_meal_plan(workout_plan, meal, profile)
+    meal_plan = MealPlan(
+            user_email=user_email,
+            preferences=meal,
+            generated_plan=generated_meal
+        )
+    
+    check_meal_plan = get_meal_plan(db, user_email)
+    if check_meal_plan:
+        update_meal_plan(db, user_email, meal_plan.preferences.dict(), generated_meal)
+        return {"message": "Meal plan updated successfully"}
+    # Store meal preferences
+    db_meal_plans = create_meal_plan(db, user_email, meal_plan.preferences.dict(), generated_meal)
+
+    return {"message": "Meal plan created successfully", "meal_plan": db_meal_plans}
 
 @router.get("/meal-plan/")
-def get_meal(user: dict = Depends(get_current_user)):
-    user_email = user["email"]
+def get_meal(db: Session = Depends(get_db), user: UserRequest = Depends(get_current_user)):
+    user_email = user.email
+    meal_plan = get_meal_plan(db, user_email)
+    if not meal_plan:
+        raise HTTPException(status_code=404, detail="No meal plan found")
     
-    # Fetch the workout plan
-    workout_plan = db_meal_plans.get(user_email)
-    if not workout_plan:
-        raise HTTPException(status_code=404, detail="No workout plan found")
-
-    return workout_plan["generated_plan"]
+    return meal_plan.generated_plan

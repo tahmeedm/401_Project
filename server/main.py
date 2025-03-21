@@ -22,7 +22,7 @@ app.add_middleware(
 # Include the routers for different API endpoints
 app.include_router(auth.router, prefix="/api")
 app.include_router(profile.router, prefix="/api")
-app.include_router(goals.router, prefix="/api")
+# app.include_router(goals.router, prefix="/api")
 app.include_router(workout.router, prefix="/api")
 app.include_router(meal.router, prefix="/api")
 app.include_router(progress.router, prefix="/api")

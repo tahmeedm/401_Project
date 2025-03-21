@@ -1,44 +1,65 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import List, Optional
+from typing import List
+from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.dialects.postgresql import JSONB
+from database import Base
 
-class User(BaseModel):
-    email: EmailStr
-    password: str
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    password = Column(String)
 
-class TokenResponse(BaseModel):
-    token: str
+class Profile(Base):
+    __tablename__ = 'user_profiles'
 
-class UserProfile(BaseModel):
-    name: str
-    age: int
-    sex: str
-    height: int
-    weight: int
-    fitness_level: str
-    dietary_preference: Optional[str] = None
-
-class FitnessGoal(BaseModel):
-    goal_type: str
-    target_value: int
-    start_date: str
-    end_date: Optional[str] = None
-
-class WorkoutPlan(BaseModel):
-    workout_type: str
-    equipment_access: List[str]
-
-class MealPlan(BaseModel):
-    calories: str = Field(..., pattern="^(low|medium|high)$", description="Caloric intake preference")
-    allergies: List[str] = Field(default=[], description="List of allergies")
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String, unique=True, index=True)  # For referencing the user (Email)
+    name = Column(String)
+    age = Column(Integer)
+    sex = Column(String)
+    height = Column(Integer)
+    weight = Column(Integer)
+    fitness_level = Column(String)
+    dietary_preference = Column(String, nullable=True)
 
 
-class Progress(BaseModel):
-    weight: List[dict]
-    workouts_completed: int
-    streak: int
-    calories_burned: int
-    last_workout_day: int
-    personal_records: List[dict]
+class WorkoutPlan(Base):
+    __tablename__ = "workout_plans"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String, unique=True, index=True)
+    preferences = Column(JSONB)  # Store preferences as JSONB
+    generated_plan = Column(JSONB)
+
+
+class MealPlan(Base):
+    __tablename__ = "meal_plans"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String, unique=True, index=True)
+    preferences = Column(JSONB)  # Store preferences as JSONB
+    generated_plan = Column(JSONB)
+
+class Progress(Base):
+    __tablename__ = "progress"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_email = Column(String, unique=True, index=True)
+    weight = Column(JSONB) 
+    workouts_completed = Column(Integer)
+    streak = Column(Integer)
+    calories_burned = Column(Integer)
+    last_workout_day = Column(Integer)
+    personal_records = Column(JSONB)  
+
+
+
+
+####################
+######LLM MODELS####
+####################
 
 class Exercise(BaseModel):
     """A model representing an exercise."""

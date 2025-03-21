@@ -1,6 +1,5 @@
-
 from datetime import datetime
-from models import Progress
+from schemas import ProgressModel
 from agent import WorkoutTrainer
 
 mock_workouts = {
@@ -303,7 +302,7 @@ mock_meals = {
                 ],
 }
 
-MOCK_PROGRESS = Progress(
+MOCK_PROGRESS = ProgressModel(
     weight=[
         {"date": "2023-01-01", "value": 80},
         {"date": "2023-01-15", "value": 79},
