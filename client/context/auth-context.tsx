@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
 
 type User = {
   email: string
@@ -133,7 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       // API call to register
-      const response = await fetch(`${API_URL}/api/register`, {
+      const response = await fetch(`${API_URL}/api/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

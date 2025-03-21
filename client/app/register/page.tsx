@@ -42,6 +42,7 @@ export default function Register() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setServerError(null)
     try {
+      console.log(values)
       await register(values.email, values.password)
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Registration failed")

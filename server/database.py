@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from databases import Database
 
 # Database Configuration
-DATABASE_URL = "postgresql://postgres:password@localhost:5432/local-dev"
+DATABASE_URL = "postgresql://postgress:password@fitmate-db.c5q0au4ag46z.ca-central-1.rds.amazonaws.com:5432/postgres"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

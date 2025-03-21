@@ -60,7 +60,7 @@ type UserProfile = {
   dietary_preference: string
 }
 
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:80"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
 export default function Dashboard() {
   const { user } = useAuth()
   const router = useRouter()
