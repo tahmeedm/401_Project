@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "https://fitmatebackend.org"
 
 type User = {
   email: string

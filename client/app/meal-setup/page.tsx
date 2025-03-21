@@ -21,7 +21,7 @@ const formSchema = z.object({
   calories: z.string().min(1, { message: "Please select your caloric preference" }),
   allergies: z.array(z.string()).optional(),
 })
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "https://fitmatebackend.org"
 export default function MealSetup() {
   const { user, setHasMealPlan } = useAuth()
   const [loading, setLoading] = useState(false)

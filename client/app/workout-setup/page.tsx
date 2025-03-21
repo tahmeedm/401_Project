@@ -20,7 +20,7 @@ const formSchema = z.object({
   workout_type: z.string().min(1, { message: "Please select a workout type" }),
   equipment_access: z.array(z.string()).min(1, { message: "Please select at least one equipment option" }),
 })
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "https://fitmatebackend.org"
 const equipmentOptions = [
   { id: "none", label: "No Equipment (Bodyweight Only)" },
   { id: "dumbbells", label: "Dumbbells" },

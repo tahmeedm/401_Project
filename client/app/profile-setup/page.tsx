@@ -14,7 +14,7 @@ import { useAuth } from "@/context/auth-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dumbbell } from "lucide-react"
 
-var API_URL = process.env.NEXT_PUBLIC_API_URL || "http://35.183.135.139:8000"
+var API_URL = process.env.NEXT_PUBLIC_API_URL || "https://fitmatebackend.org"
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
