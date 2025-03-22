@@ -16,7 +16,7 @@ from models import ServerDietResponse, ServerWorkoutResponse
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
 try:
-    GOOGLE_API_KEY = "AIzaSyDU-QA8t535_tZj8vyj2LAV3Hxma69Ddvs" 
+    GOOGLE_API_KEY = os.environ("GOOGLE_API_KEY")
 except KeyError as e:
     print(
         "GOOGLE_API_KEY not set. Please set it in your environment variables."
@@ -70,8 +70,6 @@ class WorkoutTrainer:
 
                 # Parse and validate
                 output = self.parser.parse(response.content)
-                if isinstance(output, list) and len(output) > 0:
-                    output = output[0]  # Unpack the first dictionary if it's a list
                 ServerWorkoutResponse(**output)
 
                 return output
