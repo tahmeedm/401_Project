@@ -2,7 +2,6 @@
 
 import os
 import sys
-import json
 from threading import Lock
 
 from langchain_google_genai import ChatGoogleGenerativeAI

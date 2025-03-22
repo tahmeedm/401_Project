@@ -1,21 +1,32 @@
+"""Definitions of Database and Pydantic models for fitmate."""
+
 from typing import List
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB
 from database import Base
 
+
 class User(Base):
+    """User model for the database."""
+
     __tablename__ = "users"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     password = Column(String)
 
+
 class Profile(Base):
-    __tablename__ = 'user_profiles'
+    """Profile model for the database."""
+
+    __tablename__ = "user_profiles"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_email = Column(String, unique=True, index=True)  # For referencing the user (Email)
+    user_email = Column(
+        String, unique=True, index=True
+    )  # For referencing the user (Email)
     name = Column(String)
     age = Column(Integer)
     sex = Column(String)
@@ -26,8 +37,10 @@ class Profile(Base):
 
 
 class WorkoutPlan(Base):
+    """Workout plan model for the database."""
+
     __tablename__ = "workout_plans"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     user_email = Column(String, unique=True, index=True)
     preferences = Column(JSONB)  # Store preferences as JSONB
@@ -35,31 +48,35 @@ class WorkoutPlan(Base):
 
 
 class MealPlan(Base):
+    """Meal plan model for the database."""
+
     __tablename__ = "meal_plans"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     user_email = Column(String, unique=True, index=True)
     preferences = Column(JSONB)  # Store preferences as JSONB
     generated_plan = Column(JSONB)
 
+
 class Progress(Base):
+    """Progress model for the database."""
+
     __tablename__ = "progress"
 
     id = Column(Integer, primary_key=True, index=True)
     user_email = Column(String, unique=True, index=True)
-    weight = Column(JSONB) 
+    weight = Column(JSONB)
     workouts_completed = Column(Integer)
     streak = Column(Integer)
     calories_burned = Column(Integer)
     last_workout_day = Column(Integer)
-    personal_records = Column(JSONB)  
+    personal_records = Column(JSONB)
 
 
+########################
+###### LLM MODELS ######
+########################
 
-
-####################
-######LLM MODELS####
-####################
 
 class Exercise(BaseModel):
     """A model representing an exercise."""
@@ -69,11 +86,13 @@ class Exercise(BaseModel):
     reps: int
     rest: int
 
+
 class Workout(BaseModel):
     """A model representing a workout of a day."""
 
     day: str
     exercises: List[Exercise]
+
 
 class ServerWorkoutResponse(BaseModel):
     """A model representing the response from the server for a 7-day workout plan."""
@@ -98,6 +117,7 @@ class DayDietPlan(BaseModel):
 
     day: str
     meals: List[Meal]
+
 
 class ServerDietResponse(BaseModel):
     """A model representing the response from the server for a 7-day diet plan."""
