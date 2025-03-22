@@ -16,7 +16,7 @@ from models import ServerDietResponse, ServerWorkoutResponse
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
 try:
-    GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
+    GOOGLE_API_KEY = "AIzaSyDU-QA8t535_tZj8vyj2LAV3Hxma69Ddvs" 
 except KeyError as e:
     print(
         "GOOGLE_API_KEY not set. Please set it in your environment variables."
