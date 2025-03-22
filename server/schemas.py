@@ -1,4 +1,7 @@
+"""Definitions of Pydantic models for fitmate."""
+
 from typing import List, Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -13,6 +16,7 @@ class UserRequest(BaseModel):
 class TokenResponse(BaseModel):
     token: str
 
+
 class UserProfile(BaseModel):
     name: str
     age: int
@@ -23,8 +27,7 @@ class UserProfile(BaseModel):
     dietary_preference: Optional[str] = None
 
     class Config:
-        from_attributes = True  
-
+        from_attributes = True
 
 
 class WorkoutPlanModel(BaseModel):
@@ -35,13 +38,17 @@ class WorkoutPlanModel(BaseModel):
         from_attributes = True
 
 
-
 class MealPlanModel(BaseModel):
-    calories: str = Field(..., pattern="^(low|medium|high)$", description="Caloric intake preference")
+    calories: str = Field(
+        ...,
+        pattern="^(low|medium|high)$",
+        description="Caloric intake preference",
+    )
     allergies: List[str] = Field(default=[], description="List of allergies")
 
     class Config:
         from_attributes = True
+
 
 class ProgressModel(BaseModel):
     weight: List[dict]

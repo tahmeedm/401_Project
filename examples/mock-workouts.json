@@ -1,0 +1,255 @@
+{
+    "workout_type": "Strength Training",
+    "days_per_week": 4,
+    "equipment_access": [
+        "Dumbbells",
+        "Bench"
+    ],
+    "workout_duration": "45-60",
+    "workouts": [
+        {
+            "day": "Monday",
+            "exercises": [
+                {
+                    "name": "Barbell Bench Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 90
+                },
+                {
+                    "name": "Incline Dumbbell Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Dumbbell Flyes",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Overhead Press",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Lateral Raises",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+            ]
+        },
+        {
+            "day": "Tuesday",
+            "exercises": [
+                {
+                    "name": "Barbell Squats",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Romanian Deadlifts",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Leg Press",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Leg Extensions",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Hamstring Curls",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Calf Raises",
+                    "sets": 4,
+                    "reps": 15,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Wednesday",
+            "exercises": [
+                {
+                    "name": "Pull-ups (or Lat Pulldowns)",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Barbell Rows",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Seated Cable Rows",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Face Pulls",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Bicep Curls (Barbell or Dumbbell)",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                },
+                {
+                    "name": "Hammer Curls",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Thursday",
+            "exercises": [
+                {
+                    "name": "Overhead Press",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Incline Dumbbell Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Lateral Raises",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Front Raises",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Triceps Dips",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                },
+                {
+                    "name": "Close-Grip Bench Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Friday",
+            "exercises": [
+                {
+                    "name": "Deadlifts",
+                    "sets": 1,
+                    "reps": 5,
+                    "rest": 120
+                },
+                {
+                    "name": "Barbell Rows",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Pull-ups (or Lat Pulldowns)",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Dumbbell Rows",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Bicep Curls (Barbell or Dumbbell)",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                },
+                {
+                    "name": "Hammer Curls",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Saturday",
+            "exercises": [
+                {
+                    "name": "Barbell Squats",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Romanian Deadlifts",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                },
+                {
+                    "name": "Leg Press",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Leg Extensions",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Hamstring Curls",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Calf Raises",
+                    "sets": 4,
+                    "reps": 15,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Sunday",
+            "exercises": []
+        }
+    ]
+}
