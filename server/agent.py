@@ -65,6 +65,8 @@ class WorkoutTrainer:
 
                 # Parse and validate
                 output = self.parser.parse(response.content)
+                if isinstance(output, list) and len(output) > 0:
+                    output = output[0]
                 ServerWorkoutResponse(**output)
 
                 return output
