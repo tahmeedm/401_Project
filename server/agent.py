@@ -9,8 +9,8 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.exceptions import OutputParserException
 from pydantic import ValidationError
 
-from server.prompts import DIET_PLAN_PROMPT, WORKOUT_PLAN_PROMPT
-from server.models import ServerDietResponse, ServerWorkoutResponse
+from prompts import DIET_PLAN_PROMPT, WORKOUT_PLAN_PROMPT
+from models import ServerDietResponse, ServerWorkoutResponse
 
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 

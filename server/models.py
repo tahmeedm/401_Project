@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB
 
-from server.database import Base
+from database import Base
 
 
 class User(Base):

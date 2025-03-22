@@ -5,7 +5,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from server.models import ServerDietResponse, ServerWorkoutResponse
+from models import ServerDietResponse, ServerWorkoutResponse
 
 
 class TestWorkoutTrainer(unittest.TestCase):
