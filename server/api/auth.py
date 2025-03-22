@@ -1,4 +1,3 @@
-# auth.py
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session

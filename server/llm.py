@@ -14,7 +14,7 @@ mock_workouts = {
                     {
                         "name": "Barbell Bench Press",
                         "sets": 3,
-                        "reps": 8,
+                        "reps": 10,
                         "rest": 90
                     },
                     {
@@ -369,7 +369,6 @@ def generate_workout(workout, biometrics):
     llm_instance = WorkoutTrainer()
     workout = mock_workouts
     workout_plan = llm_instance.generate_workout_plan(workout, biometrics)
-    print(workout_plan)
     if "workout" in workout_plan:
         workout["workouts"] = workout_plan["workout"]
     return workout

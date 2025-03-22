@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { UserProfileCard } from "@/components/user-profile-card"
+import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 type WorkoutPlan = {
   workout_type: string
@@ -147,8 +148,10 @@ export default function Dashboard() {
         const progressData = await progressResponse.json()
         setProgress(progressData)
 
-        // Simulated last login
-        setLastLogin("2023-02-14 18:30")
+        const currentDate = new Date();
+        const dayOfWeek = currentDate.toLocaleDateString("en-US", { weekday: "long" });
+        const time = currentDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+        setLastLogin(`${dayOfWeek} ${time}`);
       } catch (error) {
         console.error("Error fetching data:", error)
       } finally {
@@ -189,11 +192,12 @@ export default function Dashboard() {
       }
 
       // Update progress
+      const randomCalories = Math.floor(Math.random() * (500 - 300 + 1)) + 300;
       const updatedProgress = {
         ...progress,
         workouts_completed: progress.workouts_completed + 1,
         streak: newStreak,
-        calories_burned: progress.calories_burned + 300,
+        calories_burned: progress.calories_burned + randomCalories,
         last_workout_day: formattedToday,
       };
 
@@ -218,16 +222,17 @@ export default function Dashboard() {
           <div class="animate-bounce text-green-500 text-4xl">✔</div>
           <p class="mt-2 text-gray-700">Workout Completed!</p>
           <p class="mt-2 text-gray-700">Streak: ${newStreak}</p>
+          <p class="mt-2 text-gray-700">Generating new workout ...</p>
         </div>
       `;
       document.body.appendChild(popup);
 
       // Close popup after animation and update the state
-      setTimeout(() => {
+      const removePopup = () => {
         document.body.removeChild(popup);
         setProgress(updatedProgress);
-      }, 2000);
-      // Fetch a new workout plan after completing the workout
+      };
+
       const newWorkoutResponse = await fetch(`${API_URL}/api/generate-new-workout`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -235,11 +240,13 @@ export default function Dashboard() {
       });
 
       if (!newWorkoutResponse.ok) {
+        removePopup();
         throw new Error("Failed to fetch new workout plan");
       }
 
       const newWorkoutData = await newWorkoutResponse.json();
       setWorkoutPlan(newWorkoutData);
+      removePopup();
     } catch (error) {
       console.error("Error finishing workout:", error);
     }
@@ -307,7 +314,7 @@ export default function Dashboard() {
             </Card>
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Last Login</CardTitle>
+                <CardTitle className="text-sm font-medium">Todays Day</CardTitle>
                 <Clock className="h-4 w-4 text-blue-500" />
               </CardHeader>
               <CardContent>
@@ -329,7 +336,7 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="px-2">
                 <div className="space-y-4">
-                  {workoutPlan?.workouts[0].exercises.map((exercise, i) => (
+                  {workoutPlan?.workouts[ Math.floor(Math.random() * 4)].exercises.map((exercise, i) => (
                     <div
                       key={i}
                       className="flex items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -420,121 +427,56 @@ export default function Dashboard() {
           </div>
 
           {/* Progress Section */}
-          <div className="mt-4">
+            <div className="mt-4">
             <Card className="border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="bg-gray-50 dark:bg-gray-800 rounded-t-lg">
-                <CardTitle className="flex items-center text-gray-800 dark:text-white">
-                  <BarChart3 className="mr-2 h-5 w-5 text-blue-600" /> Your Progress
-                </CardTitle>
-                <CardDescription>Track your fitness journey and achievements</CardDescription>
+              <CardTitle className="flex items-center text-gray-800 dark:text-white">
+                <BarChart3 className="mr-2 h-5 w-5 text-blue-600" /> Your Progress
+              </CardTitle>
+              <CardDescription>Track your fitness journey and achievements</CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="weight">
-                  <TabsList className="mb-4 bg-gray-100 dark:bg-gray-800">
-                    <TabsTrigger
-                      value="weight"
-                      className="data-[state=active]:bg-white data-[state=active]:text-cyan-600 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-cyan-400"
-                    >
-                      Weight
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="records"
-                      className="data-[state=active]:bg-white data-[state=active]:text-blue-600 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-blue-400"
-                    >
-                      Personal Records
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="activity"
-                      className="data-[state=active]:bg-white data-[state=active]:text-orange-500 dark:data-[state=active]:bg-gray-900 dark:data-[state=active]:text-orange-400"
-                    >
-                      Activity
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="weight">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium">Current Weight</p>
-                          {progress?.weight && progress.weight.length > 0 && (
-                            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                              {progress.weight[progress.weight.length - 1].value} kg
-                            </p>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Starting Weight</p>
-                          <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
-                            {progress?.weight[0].value} kg
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Change</p>
-                          <p className="text-2xl font-bold text-green-500">
-                            {progress && progress.weight && progress.weight.length > 0
-                              ? (progress.weight[0].value - progress.weight[progress.weight.length - 1].value).toFixed(
-                                1,
-                              )
-                              : 0}{" "}
-                            kg
-                          </p>
-                        </div>
-                      </div>
-                      <div className="h-[200px] w-full bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700">
-                        <p className="text-muted-foreground">Weight chart visualization would go here</p>
-                      </div>
-                    </div>
-                  </TabsContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">Workout Streak</p>
+                  <p className="text-2xl font-bold text-orange-500">{progress?.streak || 0} days</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Workouts Completed</p>
+                  <p className="text-2xl font-bold text-cyan-600">{progress?.workouts_completed || 0}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Calories Burned</p>
+                  <p className="text-2xl font-bold text-red-500">
+                  {progress?.calories_burned?.toLocaleString() || 0} kcal
+                  </p>
+                </div>
+                </div>
 
-                  <TabsContent value="records">
-                    <div className="space-y-4">
-                      {progress?.personal_records.map((record, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                        >
-                          <div className="flex items-center">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400">
-                              <Trophy className="h-5 w-5" />
-                            </div>
-                            <div className="ml-4 space-y-1">
-                              <p className="text-sm font-medium leading-none">{record.exercise}</p>
-                              <p className="text-sm text-muted-foreground">Achieved on {record.date}</p>
-                            </div>
-                          </div>
-                          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{record.value}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="activity">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-medium">Weekly Goal</p>
-                          <p className="text-2xl font-bold text-orange-500">{workoutPlan?.days_per_week} workouts</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">This Week</p>
-                          <p className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">3 workouts</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Progress</p>
-                          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                            {workoutPlan ? Math.round((3 / workoutPlan.days_per_week) * 100) : 0}%
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="h-[200px] w-full bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700">
-                        <p className="text-muted-foreground">Activity chart visualization would go here</p>
-                      </div>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                {/* Chart Visualization */}
+                <div className="h-[200px] w-full bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={progress?.weight || []}>
+              <XAxis dataKey="date" stroke="#94a3b8" />
+              <YAxis stroke="#94a3b8" />
+              <Tooltip contentStyle={{ backgroundColor: "#1e293b", borderColor: "#94a3b8" }} />
+              <Legend wrapperStyle={{ color: "#94a3b8" }} />
+              <Line
+              type="monotone"
+              dataKey="value"
+              stroke="#f97316"
+              strokeWidth={3}
+              dot={{ r: 5, fill: "#f97316" }}
+              name="Weight"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+                </div>
+              </div>
               </CardContent>
             </Card>
-          </div>
+            </div>
         </>
       )}
     </DashboardShell>
