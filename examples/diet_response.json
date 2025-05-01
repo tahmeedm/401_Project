@@ -1,0 +1,319 @@
+{
+    "diet_plan": [
+        {
+            "day": "Monday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Scrambled eggs (4 whole eggs) with spinach and a slice of whole-wheat toast",
+                    "calories": 450,
+                    "carbs": 20,
+                    "protein": 35,
+                    "fat": 28
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Greek yogurt (1 cup) with a scoop of whey protein and a handful of almonds",
+                    "calories": 300,
+                    "carbs": 15,
+                    "protein": 35,
+                    "fat": 10
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Grilled chicken breast (6 oz) with quinoa (1 cup) and mixed vegetables",
+                    "calories": 600,
+                    "carbs": 50,
+                    "protein": 50,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Protein shake with 1 scoop of whey protein, banana, and almond milk",
+                    "calories": 250,
+                    "carbs": 30,
+                    "protein": 30,
+                    "fat": 5
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Salmon (6 oz) with sweet potato (1 medium) and steamed broccoli",
+                    "calories": 650,
+                    "carbs": 55,
+                    "protein": 45,
+                    "fat": 30
+                }
+            ]
+        },
+        {
+            "day": "Tuesday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Omelet with egg whites (6) and 2 whole eggs, with bell peppers, onions, and a small amount of cheese",
+                    "calories": 400,
+                    "carbs": 15,
+                    "protein": 40,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Cottage cheese (1 cup) with a few berries",
+                    "calories": 200,
+                    "carbs": 10,
+                    "protein": 25,
+                    "fat": 5
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Lean ground beef (6 oz) with brown rice (1 cup) and a side salad with olive oil and vinegar",
+                    "calories": 650,
+                    "carbs": 50,
+                    "protein": 50,
+                    "fat": 30
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Hard-boiled eggs (3) with a small apple",
+                    "calories": 280,
+                    "carbs": 15,
+                    "protein": 20,
+                    "fat": 15
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Turkey meatballs (6 oz) with zucchini noodles and marinara sauce",
+                    "calories": 550,
+                    "carbs": 40,
+                    "protein": 45,
+                    "fat": 25
+                }
+            ]
+        },
+        {
+            "day": "Wednesday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Protein pancakes (made with protein powder, oats, and egg whites) with a drizzle of honey",
+                    "calories": 420,
+                    "carbs": 45,
+                    "protein": 40,
+                    "fat": 10
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Tuna (canned in water, 5 oz) with whole-wheat crackers",
+                    "calories": 250,
+                    "carbs": 25,
+                    "protein": 30,
+                    "fat": 5
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Chicken salad (made with Greek yogurt) on whole-wheat bread",
+                    "calories": 550,
+                    "carbs": 45,
+                    "protein": 45,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Protein bar",
+                    "calories": 200,
+                    "carbs": 20,
+                    "protein": 20,
+                    "fat": 8
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Steak (6 oz) with roasted asparagus and a baked potato",
+                    "calories": 700,
+                    "carbs": 60,
+                    "protein": 50,
+                    "fat": 30
+                }
+            ]
+        },
+        {
+            "day": "Thursday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Whey protein shake with oats, banana, and peanut butter",
+                    "calories": 480,
+                    "carbs": 40,
+                    "protein": 40,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Beef jerky",
+                    "calories": 150,
+                    "carbs": 5,
+                    "protein": 20,
+                    "fat": 7
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Lentil soup with a side of whole-wheat bread",
+                    "calories": 500,
+                    "carbs": 60,
+                    "protein": 30,
+                    "fat": 10
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Casein protein shake with water",
+                    "calories": 120,
+                    "carbs": 5,
+                    "protein": 25,
+                    "fat": 1
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Pork tenderloin (6 oz) with roasted vegetables (broccoli, carrots, and peppers)",
+                    "calories": 600,
+                    "carbs": 40,
+                    "protein": 50,
+                    "fat": 25
+                }
+            ]
+        },
+        {
+            "day": "Friday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Cereal with high protein content and milk",
+                    "calories": 380,
+                    "carbs": 50,
+                    "protein": 30,
+                    "fat": 5
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Trail mix with nuts and seeds",
+                    "calories": 250,
+                    "carbs": 15,
+                    "protein": 8,
+                    "fat": 18
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Large salad with grilled chicken, mixed greens, and light vinaigrette",
+                    "calories": 500,
+                    "carbs": 25,
+                    "protein": 45,
+                    "fat": 25
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Edamame",
+                    "calories": 150,
+                    "carbs": 15,
+                    "protein": 15,
+                    "fat": 6
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Shrimp stir-fry with brown rice and lots of vegetables",
+                    "calories": 600,
+                    "carbs": 55,
+                    "protein": 40,
+                    "fat": 20
+                }
+            ]
+        },
+        {
+            "day": "Saturday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Breakfast burrito with scrambled eggs, black beans, cheese, and salsa in a whole-wheat tortilla",
+                    "calories": 550,
+                    "carbs": 40,
+                    "protein": 35,
+                    "fat": 25
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "Apple slices with peanut butter",
+                    "calories": 280,
+                    "carbs": 25,
+                    "protein": 7,
+                    "fat": 18
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Chicken and vegetable skewers with couscous",
+                    "calories": 580,
+                    "carbs": 50,
+                    "protein": 40,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Protein smoothie with spinach, protein powder, and fruit",
+                    "calories": 300,
+                    "carbs": 35,
+                    "protein": 35,
+                    "fat": 5
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Pizza (whole-wheat crust) with lean meat and lots of vegetables",
+                    "calories": 700,
+                    "carbs": 60,
+                    "protein": 40,
+                    "fat": 30
+                }
+            ]
+        },
+        {
+            "day": "Sunday",
+            "meals": [
+                {
+                    "type": "Breakfast",
+                    "name": "Waffles with protein powder and fruit",
+                    "calories": 400,
+                    "carbs": 50,
+                    "protein": 30,
+                    "fat": 10
+                },
+                {
+                    "type": "Snack 1",
+                    "name": "String cheese and a few whole-wheat crackers",
+                    "calories": 200,
+                    "carbs": 15,
+                    "protein": 15,
+                    "fat": 8
+                },
+                {
+                    "type": "Lunch",
+                    "name": "Leftover pizza",
+                    "calories": 400,
+                    "carbs": 40,
+                    "protein": 20,
+                    "fat": 20
+                },
+                {
+                    "type": "Snack 2",
+                    "name": "Rice cake with avocado",
+                    "calories": 150,
+                    "carbs": 15,
+                    "protein": 3,
+                    "fat": 10
+                },
+                {
+                    "type": "Dinner",
+                    "name": "Roast chicken with roasted potatoes and green beans",
+                    "calories": 700,
+                    "carbs": 50,
+                    "protein": 55,
+                    "fat": 30
+                }
+            ]
+        }
+    ]
+}

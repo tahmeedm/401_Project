@@ -15,11 +15,9 @@ from models import ServerDietResponse, ServerWorkoutResponse
 GEMINI_MODEL = "gemini-2.0-flash-lite"
 
 try:
-    GOOGLE_API_KEY = os.environ("GOOGLE_API_KEY")
+    GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
 except KeyError as e:
-    print(
-        "GOOGLE_API_KEY not set. Please set it in your environment variables."
-    )
+    print("GOOGLE_API_KEY not set. Please set it in your environment variables.")
     sys.exit(1)
 
 
@@ -38,9 +36,7 @@ class WorkoutTrainer:
 
     def __init__(self):
         """Initialize the Gemini LLM instance."""
-        self.llm = ChatGoogleGenerativeAI(
-            model=GEMINI_MODEL, api_key=GOOGLE_API_KEY
-        )
+        self.llm = ChatGoogleGenerativeAI(model=GEMINI_MODEL, api_key=GOOGLE_API_KEY)
         self.parser = JsonOutputParser()
 
     def generate_workout_plan(
@@ -73,17 +69,13 @@ class WorkoutTrainer:
 
                 return output
             except OutputParserException as e:
-                print(
-                    f"OutputParserException occurred: {e}. Retrying ({retry})..."
-                )
+                print(f"OutputParserException occurred: {e}. Retrying ({retry})...")
                 retry -= 1
             except ValidationError as e:
                 print(f"ValidationError occurred: {e}. Retrying ({retry})...")
                 retry -= 1
 
-        return {
-            "error": f"Failed to generate workout plan after {max_retries} retries"
-        }
+        return {"error": f"Failed to generate workout plan after {max_retries} retries"}
 
     def generate_diet_plan(
         self,
@@ -125,14 +117,10 @@ class WorkoutTrainer:
 
                 return output
             except OutputParserException as e:
-                print(
-                    f"OutputParserException occurred: {e}. Retrying ({retry})..."
-                )
+                print(f"OutputParserException occurred: {e}. Retrying ({retry})...")
                 retry -= 1
             except ValidationError as e:
                 print(f"ValidationError occurred: {e}. Retrying ({retry})...")
                 retry -= 1
 
-        return {
-            "error": f"Failed to generate diet plan after {max_retries} retries"
-        }
+        return {"error": f"Failed to generate diet plan after {max_retries} retries"}

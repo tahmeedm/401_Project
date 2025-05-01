@@ -1,0 +1,195 @@
+{
+    "workout": [
+        {
+            "day": "Monday",
+            "exercises": [
+                {
+                    "name": "Barbell Bench Press",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Incline Dumbbell Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 90
+                },
+                {
+                    "name": "Dumbbell Flyes",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Overhead Triceps Extension",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Close-Grip Bench Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                }
+            ]
+        },
+        {
+            "day": "Tuesday",
+            "exercises": [
+                {
+                    "name": "Barbell Back Squats",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Leg Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 90
+                },
+                {
+                    "name": "Leg Extensions",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Hamstring Curls",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Calf Raises",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Wednesday",
+            "exercises": [
+                {
+                    "name": "Pull-ups (or Lat Pulldowns)",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Barbell Rows",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 90
+                },
+                {
+                    "name": "Seated Cable Rows",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Bicep Curls",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Hammer Curls",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Thursday",
+            "exercises": [
+                {
+                    "name": "Overhead Press",
+                    "sets": 3,
+                    "reps": 8,
+                    "rest": 90
+                },
+                {
+                    "name": "Lateral Raises",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Front Raises",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Face Pulls",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                },
+                {
+                    "name": "Arnold Press",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 75
+                }
+            ]
+        },
+        {
+            "day": "Friday",
+            "exercises": [
+                {
+                    "name": "Deadlifts",
+                    "sets": 1,
+                    "reps": 5,
+                    "rest": 120
+                },
+                {
+                    "name": "Romanian Deadlifts",
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 90
+                },
+                {
+                    "name": "Good Mornings",
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 60
+                },
+                {
+                    "name": "Hyperextensions",
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60
+                }
+            ]
+        },
+        {
+            "day": "Saturday",
+            "exercises": [
+                {
+                    "name": "Rest or Active Recovery (light cardio, stretching)",
+                    "sets": 0,
+                    "reps": 0,
+                    "rest": 0
+                }
+            ]
+        },
+        {
+            "day": "Sunday",
+            "exercises": [
+                {
+                    "name": "Rest or Active Recovery (light cardio, stretching)",
+                    "sets": 0,
+                    "reps": 0,
+                    "rest": 0
+                }
+            ]
+        }
+    ]
+}

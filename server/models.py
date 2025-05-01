@@ -5,6 +5,7 @@ from typing import List
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB
+
 from database import Base
 
 
@@ -72,11 +73,9 @@ class Progress(Base):
     last_workout_day = Column(Integer)
     personal_records = Column(JSONB)
 
-
 ########################
 ###### LLM MODELS ######
 ########################
-
 
 class Exercise(BaseModel):
     """A model representing an exercise."""

@@ -1,0 +1,46 @@
+{
+    "workout_type": "Strength Training",
+    "days_per_week": 4,
+    "equipment_access": [
+        "Dumbbells",
+        "Bench"
+    ],
+    "workout_duration": "45-60",
+    "workouts": [
+        {
+            "day": "Monday",
+            "exercises": [
+                {
+                    "name": "Barbell Bench Press",
+                    "sets": "3 sets",
+                    "reps": 10,
+                    "rest": 90
+                }
+            ]
+        },
+        {
+            "day": "Tuesday",
+            "exercises": []
+        },
+        {
+            "day": "Wednesday",
+            "exercises": []
+        },
+        {
+            "day": "Thursday",
+            "exercises": []
+        },
+        {
+            "day": "Friday",
+            "exercises": []
+        },
+        {
+            "day": "Saturday",
+            "exercises": []
+        },
+        {
+            "day": "Sunday",
+            "exercises": []
+        }
+    ]
+}
