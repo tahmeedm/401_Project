@@ -1,4 +1,7 @@
+"""Definitions of Database and Pydantic models for fitmate."""
+
 from typing import List
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB
@@ -7,6 +10,8 @@ from database import Base
 
 
 class User(Base):
+    """User model for the database."""
+
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -15,6 +20,8 @@ class User(Base):
 
 
 class Profile(Base):
+    """Profile model for the database."""
+
     __tablename__ = "user_profiles"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -31,6 +38,8 @@ class Profile(Base):
 
 
 class WorkoutPlan(Base):
+    """Workout plan model for the database."""
+
     __tablename__ = "workout_plans"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -40,6 +49,8 @@ class WorkoutPlan(Base):
 
 
 class MealPlan(Base):
+    """Meal plan model for the database."""
+
     __tablename__ = "meal_plans"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -49,6 +60,8 @@ class MealPlan(Base):
 
 
 class Progress(Base):
+    """Progress model for the database."""
+
     __tablename__ = "progress"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -60,11 +73,9 @@ class Progress(Base):
     last_workout_day = Column(Integer)
     personal_records = Column(JSONB)
 
-
-####################
-######LLM MODELS####
-####################
-
+########################
+###### LLM MODELS ######
+########################
 
 class Exercise(BaseModel):
     """A model representing an exercise."""

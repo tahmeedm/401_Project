@@ -1,0 +1,49 @@
+{
+    "calories": "medium",
+    "allergies": [
+        "Peanuts",
+        "Shellfish"
+    ],
+    "meals": [
+        {
+            "type": "Breakfast",
+            "name": "Scrambled eggs (3) with whole-wheat toast and avocado",
+            "calories": 480,
+            "carbs": 30,
+            "protein": 30,
+            "fat": 25
+        },
+        {
+            "type": "Snack",
+            "name": "Protein shake with spinach and peanut butter",
+            "calories": 320,
+            "carbs": 20,
+            "protein": 40,
+            "fat": 10
+        },
+        {
+            "type": "Lunch",
+            "name": "Tuna salad (made with Greek yogurt) on whole-wheat bread",
+            "calories": 500,
+            "carbs": 40,
+            "protein": 40,
+            "fat": 20
+        },
+        {
+            "type": "Snack",
+            "name": "Beef jerky and a handful of mixed nuts",
+            "calories": 280,
+            "carbs": 10,
+            "protein": 20,
+            "fat": 18
+        },
+        {
+            "type": "Dinner",
+            "name": "Chicken and vegetable skewers with couscous",
+            "calories": 650,
+            "carbs": 60,
+            "protein": 45,
+            "fat": 20
+        }
+    ],
+}
